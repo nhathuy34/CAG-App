@@ -12,7 +12,6 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool _isGamer = true;
-  bool _isGamerRegister = true;
   bool _rememberMe = false;
   bool _agreeTerms = false;
 
@@ -46,7 +45,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
             style: const TextStyle(color: AppColors.textWhite, fontSize: 14),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(color: AppColors.textGray.withOpacity(0.5), fontSize: 14),
+              hintStyle: TextStyle(color: AppColors.textGray, fontSize: 14),
               filled: true,
               fillColor: AppColors.inputBackground,
               border: OutlineInputBorder(
