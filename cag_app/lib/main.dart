@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'screens/landing_screen.dart';
+import 'theme/app_colors.dart';
 
 void main() {
   runApp(const MainApp());
@@ -9,12 +11,15 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'CAG App',
+      theme: ThemeData(
+        scaffoldBackgroundColor: AppColors.backgroundDark,
+        primaryColor: AppColors.cyanPrimary,
+        fontFamily: 'Roboto',
       ),
+      home: const LandingScreen(),
     );
   }
 }
