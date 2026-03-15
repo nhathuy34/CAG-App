@@ -1,26 +1,23 @@
 import 'dart:ui';
 import 'package:cag_app/src/constants/app_theme.dart';
+import 'package:cag_app/src/features/authentication/auth_provider.dart';
 import 'package:cag_app/src/features/authentication/login_form.dart';
+import 'package:cag_app/src/features/authentication/register_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AuthScreen extends ConsumerStatefulWidget {
+class AuthScreen extends ConsumerWidget {
   final bool isLogin;
   const AuthScreen({super.key, required this.isLogin});
 
   @override
-  ConsumerState<AuthScreen> createState() => _AuthScreenState();
-}
-
-class _AuthScreenState extends ConsumerState<AuthScreen> {
-  bool isGamerSelected = true;
-
-  @override
-  Widget build(BuildContext context) {
-    final Color activeColor = isGamerSelected ? AppTheme.cyanNeon : AppTheme.gold;
+  Widget build(BuildContext context,WidgetRef ref) {
+    final isGamer = ref.watch(isGamerProvider);
+    final formHeight = ref.watch(authFormHeightProvider);
+    final activeColor = isGamer ? AppTheme.cyanNeon : AppTheme.gold;
 
     return DefaultTabController(
-      initialIndex: widget.isLogin ? 0 : 1,
+      initialIndex: isLogin ? 0 : 1,
       length: 2,
       child: Scaffold(
         backgroundColor: Colors.transparent, // Để nhìn thấy background của WelcomeScreen
@@ -43,27 +40,28 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   width: MediaQuery.of(context).size.width * 0.9,
                   padding: const EdgeInsets.all(25),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0D141A).withOpacity(0.85),
+                    color: AppTheme.cardBg.withOpacity(0.85), 
                     borderRadius: BorderRadius.circular(28),
                     border: Border.all(color: AppTheme.cyanNeon, width: 1),
                   ),
+
+                  // Nội dung Form bên trong
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // PHẦN THAY ĐỔI: Tab chính giữa và nút X bên phải
+                      // Tab chính giữa và nút X bên phải
                       _buildTopBar(context),
-                      
                       const SizedBox(height: 25),
-                      _buildRoleToggle(activeColor),
-                      const SizedBox(height: 30),
 
                       // TabView chứa nội dung Form
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxHeight: 330),
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        height: formHeight,
                         child: TabBarView(
                           children: [
-                            LoginForm(activeColor: activeColor),
-                            const Center(child: Text("FORM ĐĂNG KÝ", style: TextStyle(color: Colors.white))),
+                            LoginForm(activeColor: activeColor, isGamer: isGamer),
+                            RegisterForm(activeColor: activeColor, isGamer: isGamer),
                           ],
                         ),
                       ),
@@ -119,47 +117,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  // Widget _buildRoleToggle để chọn giữa GAMER và CHỦ PHÒNG
-  Widget _buildRoleToggle(Color activeColor) {
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: Colors.black26,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Row(
-        children: [
-          Expanded(child: _roleOption("GAMER", isGamerSelected, AppTheme.cyanNeon)),
-          Expanded(child: _roleOption("CHỦ PHÒNG", !isGamerSelected, AppTheme.gold)),
-        ],
-      ),
-    );
-  }
-
-  // Widget _roleOption để tạo từng lựa chọn vai trò
-  Widget _roleOption(String title, bool isSelected, Color color) {
-    return GestureDetector(
-      onTap: () => setState(() => isGamerSelected = (title == "GAMER")),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected ? color : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: isSelected ? Colors.black : Colors.white24,
-            fontWeight: FontWeight.w900,
-            fontSize: 12,
-          ),
-        ),
       ),
     );
   }
