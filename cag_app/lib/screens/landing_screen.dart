@@ -24,7 +24,7 @@ class _LandingScreenState extends State<LandingScreen> {
             child: Image.asset('assets/background.png', fit: BoxFit.cover),
           ),
           Container(
-            color: Colors.black.withOpacity(0.6),
+            color: Colors.black,
           ),
           SafeArea(
             child: Padding(
