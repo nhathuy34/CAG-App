@@ -1,4 +1,4 @@
-import 'package:cag_app/Screens/welcome_screen.dart';
+import 'package:cag_app/src/features/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

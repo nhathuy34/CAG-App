@@ -1,4 +1,4 @@
-import 'package:cag_app/src/constants/app_theme.dart';
+import 'package:cag_app/src/common_widgets/cag_text_field.dart';
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {
@@ -16,9 +16,23 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildTextField("TÀI KHOẢN (SĐT/USERNAME)", "Nhập tên đăng nhập..."),
+        // Ô Tài khoản
+        CagTextField(
+          label: "TÀI KHOẢN",
+          hint: "Nhập SĐT/Username...",
+          activeColor: widget.activeColor, // Nhận từ AuthScreen (Cyan hoặc Gold)
+          borderRadius: 8,
+        ),
         const SizedBox(height: 15),
-        _buildTextField("MẬT KHẨU", "••••••••", isPassword: true),
+
+        // Ô Mật khẩu
+        CagTextField(
+          label: "MẬT KHẨU",
+          hint: "••••••••",
+          activeColor: widget.activeColor,
+          isPassword: true,
+          borderRadius: 8,
+        ),
         const SizedBox(height: 15),
         
         // Hàng Ghi nhớ & Quên mật khẩu
@@ -73,33 +87,6 @@ class _LoginFormState extends State<LoginForm> {
             child: Text(
               "ĐĂNG NHẬP NGAY",
               style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTextField(String label, String hint, {bool isPassword = false}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(color: AppTheme.textDim, fontSize: 11, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          decoration: BoxDecoration(
-            color: Colors.black26,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: AppTheme.borderWhite),
-          ),
-          child: TextField(
-            obscureText: isPassword,
-            style: const TextStyle(color: AppTheme.textWhite),
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: const TextStyle(color: AppTheme.textHint, fontSize: 14),
-              border: InputBorder.none,
             ),
           ),
         ),
