@@ -19,12 +19,15 @@ class _LandingScreenState extends State<LandingScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Container(
-            color: AppColors.backgroundDark,
-            child: Image.asset('assets/background.png', fit: BoxFit.cover),
+          Image.asset(
+            'assets/background.png',
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(color: AppColors.backgroundDark);
+            },
           ),
           Container(
-            color: Colors.black,
+            color: Colors.black.withOpacity(0.6),
           ),
           SafeArea(
             child: Padding(
@@ -86,65 +89,24 @@ class _LandingScreenState extends State<LandingScreen> {
                     textAlign: TextAlign.center,
                   ),
                   const Spacer(),
-                  Listener(
-                    onPointerDown: (_) => setState(() => _isHoverLogin = true),
-                    onPointerUp: (_) => setState(() => _isHoverLogin = false),
-                    child: MouseRegion(
-                      onEnter: (_) => setState(() => _isHoverLogin = true),
-                      onExit: (_) => setState(() => _isHoverLogin = false),
-                      child: AnimatedScale(
-                        scale: _isHoverLogin ? 1.05 : 1.0,
-                        duration: const Duration(milliseconds: 150),
-                        child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.yellowPrimary,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => const AuthScreen(initialIndex: 0)),
-                            );
-                          },
-                          icon: const Icon(Icons.login, color: Colors.black, size: 22),
-                          label: const Text(
-                            'ĐĂNG NHẬP HỘI VIÊN',
-                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ),
+                  _buildMenuButton(
+                    label: 'ĐĂNG NHẬP HỘI VIÊN',
+                    icon: Icons.login,
+                    isHover: _isHoverLogin,
+                    color: AppColors.yellowPrimary,
+                    textColor: Colors.black,
+                    onHover: (v) => setState(() => _isHoverLogin = v),
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AuthScreen(initialIndex: 0))),
                   ),
                   const SizedBox(height: 16),
-                  Listener(
-                    onPointerDown: (_) => setState(() => _isHoverRegister = true),
-                    onPointerUp: (_) => setState(() => _isHoverRegister = false),
-                    child: MouseRegion(
-                      onEnter: (_) => setState(() => _isHoverRegister = true),
-                      onExit: (_) => setState(() => _isHoverRegister = false),
-                      child: AnimatedScale(
-                        scale: _isHoverRegister ? 1.05 : 1.0,
-                        duration: const Duration(milliseconds: 150),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => const AuthScreen(initialIndex: 1)),
-                            );
-                          },
-                          child: const Text(
-                            'ĐĂNG KÝ MỚI',
-                            style: TextStyle(color: AppColors.textWhite, fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ),
+                  _buildMenuButton(
+                    label: 'ĐĂNG KÝ MỚI',
+                    isHover: _isHoverRegister,
+                    color: Colors.black,
+                    textColor: AppColors.textWhite,
+                    isOutlined: true,
+                    onHover: (v) => setState(() => _isHoverRegister = v),
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AuthScreen(initialIndex: 1))),
                   ),
                   const SizedBox(height: 32),
                   Center(
@@ -162,6 +124,50 @@ class _LandingScreenState extends State<LandingScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildMenuButton({
+    required String label,
+    required bool isHover,
+    required Color color,
+    required Color textColor,
+    required Function(bool) onHover,
+    required VoidCallback onTap,
+    IconData? icon,
+    bool isOutlined = false,
+  }) {
+    return MouseRegion(
+      onEnter: (_) => onHover(true),
+      onExit: (_) => onHover(false),
+      child: AnimatedScale(
+        scale: isHover ? 1.05 : 1.0,
+        duration: const Duration(milliseconds: 150),
+        child: SizedBox(
+          height: 55,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: color,
+              side: isOutlined ? const BorderSide(color: Colors.white24) : BorderSide.none,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            onPressed: onTap,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (icon != null) ...[
+                  Icon(icon, color: textColor, size: 22),
+                  const SizedBox(width: 8),
+                ],
+                Text(
+                  label,
+                  style: TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
