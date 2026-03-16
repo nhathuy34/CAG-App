@@ -115,10 +115,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
-// ==========================================
-// CÁC WIDGET THÀNH PHẦN GIỮ NGUYÊN (ĐÃ FIX TAB SLANT LẦN TRƯỚC)
-// ==========================================
-
 class HexagonActionButton extends StatelessWidget {
   const HexagonActionButton({super.key});
 
