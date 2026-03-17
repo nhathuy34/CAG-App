@@ -1,13 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:cag_app/src/constants/app_theme.dart';
-import 'package:cag_app/src/common_widgets/cag_text_field.dart';
-import 'package:cag_app/src/features/authentication/auth_provider.dart';
+import 'package:CAG_App/src/constants/app_theme.dart';
+import 'package:CAG_App/src/common_widgets/cag_text_field.dart';
+import 'package:CAG_App/src/features/authentication/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RegisterForm extends ConsumerStatefulWidget {
   final Color activeColor;
-  final bool isGamer;
+  final int isGamer;
   const RegisterForm({super.key, required this.activeColor, required this.isGamer});
 
   @override
@@ -211,33 +211,39 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   Widget _buildRoleToggle(Color activeColor) {
     return Row(
         children: [
-          Expanded(child: _roleOption("TÔI LÀ GAME THỦ", widget.isGamer, AppTheme.cyanNeon)),
-          Expanded(child: _roleOption("TÔI LÀ CHỦ QUÁN", !widget.isGamer, AppTheme.gold)),
+          Expanded(child: _roleOption("TÔI LÀ GAME THỦ", 1, AppTheme.cyanNeon)),
+          Expanded(child: _roleOption("TÔI LÀ CHỦ QUÁN", 2, AppTheme.gold)),
+          Expanded(child: _roleOption("ADMIN", 3, AppTheme.redNeon)),
         ],
       );
   }
 
   // Widget _roleOption để tạo từng lựa chọn vai trò
-  Widget _roleOption(String title, bool isSelected, Color color) {
+  Widget _roleOption(String title, int isSelected, Color color) {
+    final currentRole = ref.watch(isGamerProvider);
+    final roleValue = currentRole == isSelected;
     return GestureDetector(
       onTap: () {
-        ref.read(isGamerProvider.notifier).state = (title == "TÔI LÀ GAME THỦ");
+        ref.read(isGamerProvider.notifier).state = isSelected;
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        alignment: Alignment.center,
+        height: 60,
+        width: double.infinity,
         decoration: BoxDecoration(
           border: Border.all(
-            color: isSelected ? widget.activeColor : Colors.white10,width: 1.5
+            color: roleValue ? color : Colors.white10,width: 1.5
           ),
           borderRadius: BorderRadius.circular(10),
-          color: isSelected ? widget.activeColor.withOpacity(0.05) : Colors.transparent,
+          color: roleValue ? color.withOpacity(0.05) : Colors.transparent,
         ),
         child: Text(
           title,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: isSelected ? widget.activeColor : Colors.white24,
+            color: roleValue ? color : Colors.white24,
             fontWeight: FontWeight.w900,
             fontSize: 12,
           ),

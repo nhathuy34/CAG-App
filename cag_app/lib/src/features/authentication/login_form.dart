@@ -1,13 +1,13 @@
-import 'package:cag_app/src/common_widgets/cag_text_field.dart';
-import 'package:cag_app/src/constants/app_theme.dart';
-import 'package:cag_app/src/features/authentication/auth_provider.dart';
+import 'dart:ffi';
+
+import 'package:CAG_App/src/common_widgets/cag_text_field.dart';
+import 'package:CAG_App/src/constants/app_theme.dart';
+import 'package:CAG_App/src/features/authentication/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
-  final Color activeColor;
-  final bool isGamer;
-  const LoginForm({super.key, required this.activeColor, required this.isGamer});
+  const LoginForm({super.key});
 
   @override
   ConsumerState<LoginForm> createState() => _LoginFormState();
@@ -40,9 +40,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       child: Column(
         key: _formKey,
         children: [
-          _buildRoleToggle( widget.activeColor), // Nhận activeColor từ AuthScreen
-          const SizedBox(height: 20),
-
           // Ô Tài khoản
           CagTextField(
             label: "TÀI KHOẢN",
@@ -76,8 +73,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                       width: 18,
                       height: 18,
                       decoration: BoxDecoration(
-                        color: isRemember ? widget.activeColor : Colors.transparent,
-                        border: Border.all(color: isRemember ? widget.activeColor : Colors.white24),
+                        color: Colors.transparent,
+                        border: Border.all(color: Colors.white24),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: isRemember 
@@ -106,10 +103,10 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             width: double.infinity,
             height: 55,
             decoration: BoxDecoration(
-              color: widget.activeColor,
+              color: AppTheme.cyanNeon,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
-                BoxShadow(color: widget.activeColor.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))
+                BoxShadow(color: AppTheme.cyanNeon.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))
               ],
             ),
             child: const Center(
@@ -120,49 +117,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  // Widget _buildRoleToggle để chọn giữa GAMER và CHỦ PHÒNG
-  Widget _buildRoleToggle(Color activeColor) {
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: Colors.black26,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Row(
-        children: [
-          Expanded(child: _roleOption("GAMER", widget.isGamer, AppTheme.cyanNeon)),
-          Expanded(child: _roleOption("CHỦ PHÒNG", !widget.isGamer, AppTheme.gold)),
-        ],
-      ),
-    );
-  }
-
-  // Widget _roleOption để tạo từng lựa chọn vai trò
-  Widget _roleOption(String title, bool isSelected, Color color) {
-    return GestureDetector(
-      onTap: () {
-        ref.read(isGamerProvider.notifier).state = (title == "GAMER");
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected ? color : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: isSelected ? Colors.black : Colors.white24,
-            fontWeight: FontWeight.w900,
-            fontSize: 12,
-          ),
-        ),
       ),
     );
   }

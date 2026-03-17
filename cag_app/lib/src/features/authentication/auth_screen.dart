@@ -1,8 +1,8 @@
 import 'dart:ui';
-import 'package:cag_app/src/constants/app_theme.dart';
-import 'package:cag_app/src/features/authentication/auth_provider.dart';
-import 'package:cag_app/src/features/authentication/login_form.dart';
-import 'package:cag_app/src/features/authentication/register_form.dart';
+import 'package:CAG_App/src/constants/app_theme.dart';
+import 'package:CAG_App/src/features/authentication/auth_provider.dart';
+import 'package:CAG_App/src/features/authentication/login_form.dart';
+import 'package:CAG_App/src/features/authentication/register_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,7 +14,7 @@ class AuthScreen extends ConsumerWidget {
   Widget build(BuildContext context,WidgetRef ref) {
     final isGamer = ref.watch(isGamerProvider);
     final formHeight = ref.watch(authFormHeightProvider);
-    final activeColor = isGamer ? AppTheme.cyanNeon : AppTheme.gold;
+    final activeColor = isGamer==1 ? AppTheme.cyanNeon : isGamer==2 ? AppTheme.gold : AppTheme.redNeon;
 
     return DefaultTabController(
       initialIndex: isLogin ? 0 : 1,
@@ -43,6 +43,13 @@ class AuthScreen extends ConsumerWidget {
                     color: AppTheme.cardBg.withOpacity(0.85), 
                     borderRadius: BorderRadius.circular(28),
                     border: Border.all(color: AppTheme.cyanNeon, width: 1),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.cyanNeon.withOpacity(0.3),
+                        blurRadius: 40,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
                   ),
 
                   // Nội dung Form bên trong
@@ -60,7 +67,7 @@ class AuthScreen extends ConsumerWidget {
                         height: formHeight,
                         child: TabBarView(
                           children: [
-                            LoginForm(activeColor: activeColor, isGamer: isGamer),
+                            LoginForm(),
                             RegisterForm(activeColor: activeColor, isGamer: isGamer),
                           ],
                         ),

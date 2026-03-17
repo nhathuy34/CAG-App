@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cag_app/src/utils/storage_helper.dart';
+import 'package:CAG_App/src/utils/storage_helper.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-// Provider để quản lý Role (Gamer hay Owner)
-final isGamerProvider = StateProvider<bool>((ref) => true);
+// Provider để quản lý Role (Gamer, Owner và Admin)
+final isGamerProvider = StateProvider<int>((ref) => 1);
 
 // Quản lý chiều cao của Form hiện tại
 final authFormHeightProvider = StateProvider<double>((ref) => 330);

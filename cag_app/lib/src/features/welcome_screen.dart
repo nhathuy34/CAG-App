@@ -1,7 +1,8 @@
-import 'package:cag_app/src/constants/app_theme.dart';
-import 'package:cag_app/src/features/authentication/auth_screen.dart';
+import 'package:CAG_App/src/constants/app_theme.dart';
+import 'package:CAG_App/src/features/authentication/auth_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WelcomeScreen extends ConsumerWidget {
   const WelcomeScreen({super.key});
@@ -40,28 +41,42 @@ class WelcomeScreen extends ConsumerWidget {
                   const SizedBox(height: 5),
                   _buildLogo(),
 
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 5),
                   _buildBrandName(),
 
-                  const SizedBox(height: 40),
-                  const Text("CHỌN QUÁN ĐÚNG GU", style: TextStyle(color: AppTheme.textDim, fontSize: 18, fontWeight: FontWeight.bold)),
-                  const Text("CHIẾN GAME ĐÚNG CHỖ", style: TextStyle(color: AppTheme.gold, fontSize: 20, fontWeight: FontWeight.w900)),
+                  const SizedBox(height: 20),
+                  const Text(
+                    "CHỌN QUÁN ĐÚNG GU",
+                    style: TextStyle(
+                      color: AppTheme.textDim,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Text(
+                    "CHIẾN GAME ĐÚNG CHỖ",
+                    style: TextStyle(
+                      color: AppTheme.gold,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
 
                   const SizedBox(height: 50),
                   _buildButton(
-                    context, 
-                    text: "ĐĂNG NHẬP HỘI VIÊN", 
-                    color: AppTheme.gold, 
+                    context,
+                    text: "ĐĂNG NHẬP HỘI VIÊN",
+                    color: AppTheme.gold,
                     textColor: Colors.black,
                     onPressed: () => _navToAuth(context, true),
                   ),
 
                   const SizedBox(height: 15),
                   _buildButton(
-                    context, 
-                    text: "ĐĂNG KÝ MỚI", 
-                    color: Colors.transparent, 
-                    textColor: Colors.white, 
+                    context,
+                    text: "ĐĂNG KÝ MỚI",
+                    color: Colors.transparent,
+                    textColor: Colors.white,
                     isBorder: true,
                     onPressed: () => _navToAuth(context, false),
                   ),
@@ -95,12 +110,32 @@ class WelcomeScreen extends ConsumerWidget {
 
   // Hàm build logo
   Widget _buildLogo() {
-    return Transform(
-      transform: Matrix4.skewX(-0.15),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-        color: AppTheme.cyanNeon,
-        child: const Text('C', style: TextStyle(color: Colors.black, fontSize: 45, fontWeight: FontWeight.w900)),
+    return Padding(
+      padding: const EdgeInsets.all(5),
+      child: Transform(
+        transform: Matrix4.skewX(-0.15),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppTheme.cyanNeon,
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.cyanNeon.withOpacity(0.6),
+                blurRadius: 40,
+                spreadRadius: 0.0,
+                offset: const Offset(0, 0),
+              ),
+            ],
+          ),
+          child: Text(
+            'C',
+            style: GoogleFonts.rajdhani(
+              fontSize: 45,
+              fontWeight: FontWeight.w900,
+              color: Colors.black,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -109,22 +144,57 @@ class WelcomeScreen extends ConsumerWidget {
   Widget _buildBrandName() {
     return Column(
       children: [
-        RichText(
-          text: const TextSpan(
-            style: TextStyle(fontSize: 48, fontWeight: FontWeight.w900, letterSpacing: -1),
-            children: [
-              TextSpan(text: "CAG ", style: TextStyle(color: Colors.white)),
-              TextSpan(text: "GUIDE", style: TextStyle(color: AppTheme.cyanNeon)),
-            ],
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "CAG ",
+              style: GoogleFonts.rajdhani(
+                fontSize: 48,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+              ),
+            ),
+            ShaderMask(
+              blendMode: BlendMode.srcIn,
+              shaderCallback: (bounds) => LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [AppTheme.cyanNeon, const Color(0xFF3985F5)],
+                stops: const [0.2, 1.0],
+              ).createShader(bounds),
+              child: Text(
+                "GUIDE",
+                style: GoogleFonts.rajdhani(
+                  fontSize: 48,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Container(
+          height: 5,
+          width: 110,
+          decoration: BoxDecoration(
+            color: AppTheme.gold,
+            borderRadius: BorderRadius.circular(5),
           ),
         ),
-        Container(height: 5, width: 180, color: AppTheme.gold),
       ],
     );
   }
 
   // Hàm build nút bấm
-  Widget _buildButton(BuildContext context, {required String text, required Color color, required Color textColor, required VoidCallback onPressed, bool isBorder = false}) {
+  Widget _buildButton(
+    BuildContext context, {
+    required String text,
+    required Color color,
+    required Color textColor,
+    required VoidCallback onPressed,
+    bool isBorder = false,
+  }) {
     return SizedBox(
       width: double.infinity,
       height: 60,
@@ -134,10 +204,19 @@ class WelcomeScreen extends ConsumerWidget {
           backgroundColor: color,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
-            side: isBorder ? const BorderSide(color: AppTheme.textDim, width: 1.5) : BorderSide.none,
+            side: isBorder
+                ? const BorderSide(color: AppTheme.textDim, width: 1.5)
+                : BorderSide.none,
           ),
         ),
-        child: Text(text, style: TextStyle(color: textColor, fontWeight: FontWeight.w900, fontSize: 16)),
+        child: Text(
+          text,
+          style: TextStyle(
+            color: textColor,
+            fontWeight: FontWeight.w900,
+            fontSize: 16,
+          ),
+        ),
       ),
     );
   }
@@ -145,47 +224,55 @@ class WelcomeScreen extends ConsumerWidget {
   // Hàm build phần bỏ qua đăng nhập
   Widget _buildFooterLink(BuildContext context) {
     return StatefulBuilder(
-    builder: (context, setState) {
+      builder: (context, setState) {
         return Column(
           children: [
-            Text(
-              "POWERED BY CAG PRO ECOSYSTEM",
-              style: TextStyle(color: Colors.white.withOpacity(0.3), fontSize: 10, letterSpacing: 1),
-            ),
-            const SizedBox(height: 8),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (_) => const DashboardScreen()),
+                // );
+              },
               style: ButtonStyle(
-                // Loại bỏ hiệu ứng mặc định của TextButton
                 overlayColor: MaterialStateProperty.all(Colors.transparent),
                 // Thay đổi màu sắc khi hover hoặc nhấn
-                foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
-                  if (states.contains(WidgetState.hovered) || states.contains(WidgetState.pressed)) {
-                    return AppTheme.cyanNeon; // Màu khi rê chuột vào hoặc nhấn
+                foregroundColor: WidgetStateProperty.resolveWith<Color>((
+                  states,
+                ) {
+                  if (states.contains(WidgetState.hovered) ||
+                      states.contains(WidgetState.pressed)) {
+                    return AppTheme.cyanNeon;
                   }
-                  return AppTheme.textDim; // Màu xám mặc định
+                  return AppTheme.textDim;
                 }),
                 padding: WidgetStateProperty.all(EdgeInsets.zero),
               ),
               child: Row(
-                mainAxisSize: MainAxisSize.min, // Để Row không chiếm hết chiều ngang
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
                   Text(
                     "BỎ QUA, TÔI MUỐN THAM QUAN APP TRƯỚC",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                   ),
                   SizedBox(width: 5),
                   Icon(Icons.arrow_forward, size: 18),
                 ],
-              )
-            )
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "POWERED BY CAG PRO ECOSYSTEM",
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.3),
+                fontSize: 10,
+                letterSpacing: 1,
+              ),
+            ),
           ],
         );
-      }
+      },
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class AppTheme {
   static const Color cyanNeon = Color(0xFF00F2EA);
   static const Color gold = Color(0xFFE8C300);
+  static const Color redNeon = Color(0xFFFF3B3B);
   
   static const Color darkBg = Color(0xFF000000);
   static const Color cardBg = Color(0xFF0D141A);
