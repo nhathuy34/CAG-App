@@ -9,9 +9,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_secure_storage: ^10.0.0
-  http: ^1.6.0
-  provider: ^6.1.5+1
 
 dev_dependencies:
   flutter_test:
@@ -20,6 +17,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-  assets:
-    - assets/background.png
