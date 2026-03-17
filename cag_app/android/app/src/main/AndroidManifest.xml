@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="cag_app"
+        android:label="CAG_App"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
