@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'screens/landing_screen.dart';
-import 'theme/app_colors.dart';
+import 'src/features/screens/landing_screen.dart';
+import 'src/features/theme/app_colors.dart';
 
 void main() {
   runApp(const MainApp());
