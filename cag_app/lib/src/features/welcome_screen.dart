@@ -35,18 +35,19 @@ class WelcomeScreen extends ConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 5),
                   _buildLogo(),
 
                   const SizedBox(height: 25),
                   _buildBrandName(),
 
-                  const Spacer(),
+                  const SizedBox(height: 40),
                   const Text("CHỌN QUÁN ĐÚNG GU", style: TextStyle(color: AppTheme.textDim, fontSize: 18, fontWeight: FontWeight.bold)),
                   const Text("CHIẾN GAME ĐÚNG CHỖ", style: TextStyle(color: AppTheme.gold, fontSize: 20, fontWeight: FontWeight.w900)),
 
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 50),
                   _buildButton(
                     context, 
                     text: "ĐĂNG NHẬP HỘI VIÊN", 
@@ -65,6 +66,9 @@ class WelcomeScreen extends ConsumerWidget {
                     onPressed: () => _navToAuth(context, false),
                   ),
                   const SizedBox(height: 20),
+
+                  _buildFooterLink(context),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),
@@ -130,11 +134,58 @@ class WelcomeScreen extends ConsumerWidget {
           backgroundColor: color,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
-            side: isBorder ? const BorderSide(color: Colors.white38, width: 1.5) : BorderSide.none,
+            side: isBorder ? const BorderSide(color: AppTheme.textDim, width: 1.5) : BorderSide.none,
           ),
         ),
         child: Text(text, style: TextStyle(color: textColor, fontWeight: FontWeight.w900, fontSize: 16)),
       ),
+    );
+  }
+
+  // Hàm build phần bỏ qua đăng nhập
+  Widget _buildFooterLink(BuildContext context) {
+    return StatefulBuilder(
+    builder: (context, setState) {
+        return Column(
+          children: [
+            Text(
+              "POWERED BY CAG PRO ECOSYSTEM",
+              style: TextStyle(color: Colors.white.withOpacity(0.3), fontSize: 10, letterSpacing: 1),
+            ),
+            const SizedBox(height: 8),
+            TextButton(
+              onPressed: () {},
+              style: ButtonStyle(
+                // Loại bỏ hiệu ứng mặc định của TextButton
+                overlayColor: MaterialStateProperty.all(Colors.transparent),
+                // Thay đổi màu sắc khi hover hoặc nhấn
+                foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                  if (states.contains(WidgetState.hovered) || states.contains(WidgetState.pressed)) {
+                    return AppTheme.cyanNeon; // Màu khi rê chuột vào hoặc nhấn
+                  }
+                  return AppTheme.textDim; // Màu xám mặc định
+                }),
+                padding: WidgetStateProperty.all(EdgeInsets.zero),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min, // Để Row không chiếm hết chiều ngang
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                    "BỎ QUA, TÔI MUỐN THAM QUAN APP TRƯỚC",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  Icon(Icons.arrow_forward, size: 18),
+                ],
+              )
+            )
+          ],
+        );
+      }
     );
   }
 }
