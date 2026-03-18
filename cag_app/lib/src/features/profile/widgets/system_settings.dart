@@ -1,3 +1,4 @@
+import 'dart:ui'; // Bắt buộc phải có thư viện này để làm mờ nền (blur)
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -6,6 +7,7 @@ class SystemSection extends StatelessWidget {
   final String userPhone;
   final String userAvatar;
   final Function(String, String, String) onUpdateProfile;
+  final VoidCallback onLogout; // Hàm đăng xuất
 
   const SystemSection({
     super.key,
@@ -13,6 +15,7 @@ class SystemSection extends StatelessWidget {
     required this.userPhone,
     required this.userAvatar,
     required this.onUpdateProfile,
+    required this.onLogout,
   });
 
   @override
@@ -33,13 +36,18 @@ class SystemSection extends StatelessWidget {
               size: 14,
             ),
             onTap: () {
+              // HIỂN THỊ POP-UP VỚI NỀN MỜ
               showDialog(
                 context: context,
-                builder: (context) => UpdateOperatorDialog(
-                  initialName: userName,
-                  initialPhone: userPhone,
-                  initialAvatar: userAvatar,
-                  onSave: onUpdateProfile,
+                barrierColor: Colors.black.withOpacity(0.6), // Làm nền phía sau tối đi
+                builder: (context) => BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0), // Hiệu ứng làm mờ (Blur)
+                  child: UpdateOperatorDialog(
+                    initialName: userName,
+                    initialPhone: userPhone,
+                    initialAvatar: userAvatar,
+                    onSave: onUpdateProfile,
+                  ),
                 ),
               );
             },
@@ -73,6 +81,7 @@ class SystemSection extends StatelessWidget {
               color: Color(0xFFFF4D4D),
               size: 18,
             ),
+            onTap: onLogout, // Xử lý đăng xuất
           ),
         ],
       ),
@@ -128,21 +137,21 @@ class UpdateOperatorDialog extends StatefulWidget {
 }
 
 class _UpdateOperatorDialogState extends State<UpdateOperatorDialog> {
-  late TextEditingController _companyController;
+  late TextEditingController _nameController;
   late TextEditingController _phoneController;
   late String _currentAvatar;
 
   @override
   void initState() {
     super.initState();
-    _companyController = TextEditingController(text: widget.initialName);
+    _nameController = TextEditingController(text: widget.initialName);
     _phoneController = TextEditingController(text: widget.initialPhone);
     _currentAvatar = widget.initialAvatar;
   }
 
   @override
   void dispose() {
-    _companyController.dispose();
+    _nameController.dispose();
     _phoneController.dispose();
     super.dispose();
   }
@@ -158,129 +167,144 @@ class _UpdateOperatorDialogState extends State<UpdateOperatorDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.all(20),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24),
       child: Container(
-        padding: const EdgeInsets.all(24),
+        // THÊM VIỀN XANH VÀ NỀN TỐI CHO POP-UP
         decoration: BoxDecoration(
-          color: const Color(0xFF0B1426),
+          color: const Color(0xFF0A101D), // Màu nền tối thẫm giống ảnh
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white12),
+          border: Border.all(
+            color: const Color(0xFF005A88), // Viền xanh xám theo ảnh gốc
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF005A88).withOpacity(0.4), // Hiệu ứng phát sáng nhẹ
+              blurRadius: 15,
+              spreadRadius: 1,
+            ),
+          ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      color: const Color(0xFF00C4FF),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'UPDATE OPERATOR DATA',
-                      style: GoogleFonts.rajdhani(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
+            // Header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        color: const Color(0xFF00C4FF), // Ô vuông cyan góc trái
                       ),
-                    ),
-                  ],
-                ),
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: const Icon(
-                    Icons.close,
-                    color: Colors.white54,
-                    size: 20,
+                      const SizedBox(width: 12),
+                      Text(
+                        'UPDATE OPERATOR DATA',
+                        style: GoogleFonts.rajdhani(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.white54,
+                      size: 20,
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 32),
+            
+            // Avatar
             Center(
               child: GestureDetector(
                 onTap: _handleChangeAvatar,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        _currentAvatar,
-                        width: 64,
-                        height: 64,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          width: 64,
-                          height: 64,
-                          color: Colors.white12,
-                          child: const Icon(
-                            Icons.person,
-                            color: Colors.white38,
-                            size: 30,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: -2,
-                      right: -2,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF00C4FF),
-                          shape: BoxShape.circle,
-                        ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.white24, width: 1), // Viền mỏng quanh avatar
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(7),
+                    child: Image.network(
+                      _currentAvatar,
+                      width: 72,
+                      height: 72,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        width: 72,
+                        height: 72,
+                        color: Colors.white12,
                         child: const Icon(
-                          Icons.camera_alt,
-                          color: Colors.black,
-                          size: 10,
+                          Icons.person,
+                          color: Colors.white38,
+                          size: 32,
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 32),
-            _buildEditableInputField('COMPANY', _companyController),
-            const SizedBox(height: 16),
-            _buildEditableInputField(
-              'COMM. (PHONE)',
-              _phoneController,
-              keyboardType: TextInputType.phone,
+            
+            // Input Fields
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                children: [
+                  _buildEditableInputField('CODENAME', _nameController),
+                  const SizedBox(height: 16),
+                  _buildEditableInputField(
+                    'COMMS (PHONE)',
+                    _phoneController,
+                    keyboardType: TextInputType.phone,
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 32),
-            GestureDetector(
-              onTap: () {
-                widget.onSave(
-                  _companyController.text,
-                  _phoneController.text,
-                  _currentAvatar,
-                );
-                Navigator.pop(context);
-              },
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF00C4FF),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Center(
-                  child: Text(
-                    'SAVE CHANGES',
-                    style: GoogleFonts.rajdhani(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.0,
+            
+            // Save Button
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+              child: GestureDetector(
+                onTap: () {
+                  widget.onSave(
+                    _nameController.text,
+                    _phoneController.text,
+                    _currentAvatar,
+                  );
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF009EB8), // Nút màu Cyan
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'SAVE CHANGES',
+                      style: GoogleFonts.rajdhani(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.0,
+                      ),
                     ),
                   ),
                 ),
@@ -303,26 +327,27 @@ class _UpdateOperatorDialogState extends State<UpdateOperatorDialog> {
         Text(
           label,
           style: GoogleFonts.rajdhani(
-            color: Colors.white38,
-            fontSize: 12,
+            color: Colors.white54,
+            fontSize: 10,
             fontWeight: FontWeight.bold,
+            letterSpacing: 0.5,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: const Color(0xFF050A15),
+            color: const Color(0xFF050914), // Nút input tối đen
             borderRadius: BorderRadius.circular(6),
-            border: Border.all(color: Colors.white12),
+            border: Border.all(color: Colors.white12), // Viền mờ cho input
           ),
           child: TextField(
             controller: controller,
             keyboardType: keyboardType,
-            style: GoogleFonts.rajdhani(
+            style: GoogleFonts.ibmPlexMono( // Dùng font mono để giống code/tech
               color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
             ),
             cursorColor: const Color(0xFF00C4FF),
             decoration: const InputDecoration(
