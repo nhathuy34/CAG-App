@@ -11,6 +11,7 @@ class CagTextField extends StatefulWidget {
   final Widget? suffixIcon;     // Icon cuối ô
   final int? maxLength;
   final double verticalPadding;
+  final TextEditingController? controller;
 
   const CagTextField({
     super.key,
@@ -23,6 +24,7 @@ class CagTextField extends StatefulWidget {
     this.suffixIcon,
     this.maxLength,
     this.verticalPadding = 15.0,
+    this.controller,
   });
 
   @override
@@ -57,6 +59,7 @@ class _CagTextFieldState extends State<CagTextField> {
         const SizedBox(height: 8),
 
         TextField(
+          controller: widget.controller,
           focusNode: _focusNode,
           obscureText: widget.isPassword,
           maxLength: widget.maxLength,

@@ -2,7 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:CAG_App/src/constants/app_theme.dart';
 import 'package:CAG_App/src/common_widgets/cag_text_field.dart';
+import 'package:CAG_App/src/features/authentication/auth_api.dart';
 import 'package:CAG_App/src/features/authentication/auth_provider.dart';
+import 'package:CAG_App/src/utils/storage_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RegisterForm extends ConsumerStatefulWidget {
@@ -16,7 +18,18 @@ class RegisterForm extends ConsumerStatefulWidget {
 
 class _RegisterFormState extends ConsumerState<RegisterForm> {
   bool isAgree = false;
-  final GlobalKey _formKey = GlobalKey();
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
 
   void _updateHeight() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -35,14 +48,103 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   }
 
   @override
+  void dispose() {
+    _fullNameController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _addressController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _register() async {
+    final fullName = _fullNameController.text.trim();
+    final phone = _phoneController.text.trim();
+    final email = _emailController.text.trim();
+    final username = _usernameController.text.trim();
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+    final address = _addressController.text.trim();
+    final province = ref.read(selectedProvinceProvider);
+    final district = ref.read(selectedDistrictProvider);
+
+    if (fullName.isEmpty || phone.isEmpty || email.isEmpty || username.isEmpty || password.isEmpty) {
+      setState(() {
+        _errorMessage = 'Vui lòng điền đầy đủ thông tin.';
+      });
+      _updateHeight();
+      return;
+    }
+
+    if (password != confirmPassword) {
+      setState(() {
+        _errorMessage = 'Mật khẩu xác nhận không khớp.';
+      });
+      _updateHeight();
+      return;
+    }
+
+    if (!isAgree) {
+      setState(() {
+        _errorMessage = 'Bạn cần đồng ý điều khoản để tiếp tục.';
+      });
+      _updateHeight();
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final authApi = ref.read(authApiProvider);
+      final response = await authApi.register(
+        fullName: fullName,
+        phone: phone,
+        email: email,
+        username: username,
+        password: password,
+        isGamer: widget.isGamer,
+        province: province,
+        district: district,
+        address: address,
+      );
+
+      await StorageHelper.saveAuthData(token: response.token, role: response.role);
+      ref.invalidate(authCheckerProvider);
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Đăng ký thành công')), 
+      );
+      Navigator.of(context).pop();
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+      });
+      _updateHeight();
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
-      child: Column(
+      child: Form(
         key: _formKey,
-        children: [
-          Text("TẠO TÀI KHOẢN", style: TextStyle(color: AppTheme.cyanNeon, fontSize: 24, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
+        child: Column(
+          children: [
+            Text("TẠO TÀI KHOẢN", style: TextStyle(color: AppTheme.cyanNeon, fontSize: 24, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
 
           _buildRoleToggle(widget.activeColor),
           const SizedBox(height: 20),
@@ -51,9 +153,10 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             children: [
               Expanded(
                 child: CagTextField(
+                  controller: _fullNameController,
                   label: "HỌ TÊN *",
                   hint: "Nguyễn Văn A",
-                  activeColor: AppTheme.cyanNeon,
+                  activeColor: widget.activeColor,
                   borderRadius: 8,
                   verticalPadding: 10,
                 ),
@@ -61,9 +164,10 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
               const SizedBox(width: 10),
               Expanded(
                 child: CagTextField(
+                  controller: _phoneController,
                   label: "SỐ ĐIỆN THOẠI *",
                   hint: "0123456789",
-                  activeColor: AppTheme.cyanNeon,
+                  activeColor: widget.activeColor,
                   borderRadius: 8,
                   verticalPadding: 10,
                 ),
@@ -73,18 +177,20 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
           const SizedBox(height: 10),
 
           CagTextField(
+            controller: _emailController,
             label: "GMAIL (NHẬN OTP) *",
             hint: "nguyena@gmail.com",
-            activeColor: AppTheme.cyanNeon,
+            activeColor: widget.activeColor,
             borderRadius: 8,
             verticalPadding: 10,
           ),
           const SizedBox(height: 15),
 
           CagTextField(
+            controller: _usernameController,
             label: "TÀI KHOẢN (USERNAME) *",
             hint: "nguyena",
-            activeColor: AppTheme.cyanNeon,
+            activeColor: widget.activeColor,
             borderRadius: 8,
             verticalPadding: 10,
           ),
@@ -94,9 +200,10 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             children: [
               Expanded(
                 child: CagTextField(
+                  controller: _passwordController,
                   label: "MẬT KHẨU *",
                   hint: "••••••••",
-                  activeColor: AppTheme.cyanNeon,
+                  activeColor: widget.activeColor,
                   isPassword: true,
                   borderRadius: 8,
                   verticalPadding: 10,
@@ -105,9 +212,10 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
               const SizedBox(width: 10),
               Expanded(
                 child: CagTextField(
+                  controller: _confirmPasswordController,
                   label: "XÁC NHẬN MK *",
                   hint: "••••••••",
-                  activeColor: AppTheme.cyanNeon,
+                  activeColor: widget.activeColor,
                   isPassword: true,
                   borderRadius: 8,
                   verticalPadding: 10,
@@ -116,6 +224,16 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             ],
           ),
           const SizedBox(height: 8),
+
+          if (_errorMessage != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Text(
+                _errorMessage!,
+                style: const TextStyle(color: Colors.redAccent, fontSize: 12),
+                textAlign: TextAlign.center,
+              ),
+            ),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,9 +246,10 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
           const SizedBox(height: 8),
 
           CagTextField(
+            controller: _addressController,
             label: null,
             hint: "Địa chỉ chi tiết", 
-            activeColor: AppTheme.cyanNeon,
+            activeColor: widget.activeColor,
             borderRadius: 8,
             verticalPadding: 10,
           ),
@@ -180,29 +299,42 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
           ),
 
           const SizedBox(height: 10),
-          Container(
-            width: double.infinity,
-            height: 45,
-            decoration: BoxDecoration(
-              color: widget.activeColor,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: widget.activeColor.withOpacity(0.3),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                )
-              ]
-            ),
-            child: const Center(
-              child: Text(
-                "ĐĂNG KÝ",
-                style: TextStyle(color: AppTheme.textBlack, fontWeight: FontWeight.bold, fontSize: 16),
+          GestureDetector(
+            onTap: _isLoading ? null : _register,
+            child: Container(
+              width: double.infinity,
+              height: 45,
+              decoration: BoxDecoration(
+                color: widget.activeColor,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: widget.activeColor.withOpacity(0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  )
+                ],
               ),
-            )
+              child: Center(
+                child: _isLoading
+                    ? const SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppTheme.textBlack,
+                        ),
+                      )
+                    : const Text(
+                        "ĐĂNG KÝ",
+                        style: TextStyle(color: AppTheme.textBlack, fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+              ),
+            ),
           )
         ],
       ),
+    ),
     );
   }
 
@@ -228,7 +360,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           border: Border.all(
-            color: isSelected ? widget.activeColor : Colors.white10,width: 1.5
+            color: isSelected ? widget.activeColor : Colors.white10,
+            width: 1.5,
           ),
           borderRadius: BorderRadius.circular(10),
           color: isSelected ? widget.activeColor.withOpacity(0.05) : Colors.transparent,
