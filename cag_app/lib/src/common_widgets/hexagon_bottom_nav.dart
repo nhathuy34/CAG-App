@@ -38,7 +38,7 @@ class _HexagonBottomNavState extends State<HexagonBottomNav>
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
+      height: 90,
       decoration: BoxDecoration(
         color: const Color(0xFF020617),
         border: Border(
@@ -62,7 +62,7 @@ class _HexagonBottomNavState extends State<HexagonBottomNav>
 
           // Nút Hexagon giữa — nổi lên trên 24px (tương đương -top-6 trong CSS)
           Positioned(
-            top: -24,
+            top: -10,
             child: GestureDetector(
               onTap: () => widget.onTap(2),
               child: _buildHexagonCenterButton(),

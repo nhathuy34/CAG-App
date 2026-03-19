@@ -1,4 +1,4 @@
-import 'package:CAG_App/src/features/welcome_screen.dart';
+import 'package:CAG_App/src/features/slash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 void main() {
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: const WelcomeScreen(),
+      home: const SlashScreen(),
     );
   }
 }

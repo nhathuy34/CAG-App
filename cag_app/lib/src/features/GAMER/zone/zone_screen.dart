@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../common_widgets/hexagon_bottom_nav.dart';
-import '../scan/screen.dart';
+import '../../../common_widgets/hexagon_bottom_nav.dart';
+import '../scan/scan_feature.dart';
 class ZoneScreen extends StatefulWidget {
   const ZoneScreen({super.key});
 

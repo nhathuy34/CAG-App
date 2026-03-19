@@ -1,6 +1,7 @@
+import 'package:CAG_App/src/common_widgets/cag_primary_button.dart';
 import 'package:CAG_App/src/constants/app_theme.dart';
+import 'package:CAG_App/src/features/GAMER/homepage_screen.dart';
 import 'package:CAG_App/src/features/authentication/auth_screen.dart';
-import 'package:CAG_App/src/features/profile/screen/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -64,22 +65,18 @@ class WelcomeScreen extends ConsumerWidget {
                   ),
 
                   const SizedBox(height: 50),
-                  _buildButton(
-                    
-                    context,
-                    icon: Icons.login,
+                  CagPrimaryButton(
                     text: "ĐĂNG NHẬP HỘI VIÊN",
-                    color: AppTheme.gold,
-                    textColor: const Color(0xFF000000),
+                    prefixIcon: Icons.login,
+                    backgroundColor: AppTheme.gold,
                     onPressed: () => _navToAuth(context, true),
                   ),
 
                   const SizedBox(height: 15),
-                  _buildButton(
-                    context,
+
+                  // Thay thế nút Đăng ký mới
+                  CagPrimaryButton(
                     text: "ĐĂNG KÝ MỚI",
-                    color: Colors.transparent,
-                    textColor: Colors.white,
                     isBorder: true,
                     onPressed: () => _navToAuth(context, false),
                   ),
@@ -111,38 +108,12 @@ class WelcomeScreen extends ConsumerWidget {
     );
   }
 
-  // Hàm build logo
-  // Widget _buildLogo() {
-  //   return Transform(
-  //     transform: Matrix4.skewX(-0.15),
-  //     child: Container(
-  //       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-  //       //color: AppTheme.cyanNeon,
-  //       decoration: BoxDecoration(
-  //         boxShadow: [
-  //           BoxShadow(
-  //             color: AppTheme.cyanNeon.withOpacity(0.6),
-  //             blurRadius: 40,
-  //             spreadRadius: 0.0,
-  //             offset: const Offset(0, 0)
-  //           )
-  //         ]
-  //       ),
-  //       child: Text(
-  //         'C',
-  //         style: GoogleFonts.rajdhani(
-  //           fontSize: 45,
-  //           fontWeight: FontWeight.w900,
-  //           color: Colors.black, // Chọn độ dày của chữ nếu cần
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
   Widget _buildLogo() {
     // Bọc Padding ở ngoài cùng để ánh sáng có không gian tỏa ra
     return Padding(
-      padding: const EdgeInsets.all(10.0), // Cho khoảng trống bằng với blurRadius
+      padding: const EdgeInsets.all(
+        10.0,
+      ), // Cho khoảng trống bằng với blurRadius
       child: Transform(
         transform: Matrix4.skewX(-0.15),
         child: Container(
@@ -154,16 +125,16 @@ class WelcomeScreen extends ConsumerWidget {
                 color: AppTheme.cyanNeon.withOpacity(0.6),
                 blurRadius: 40,
                 spreadRadius: 0.0,
-                offset: const Offset(0, 0)
-              )
-            ]
+                offset: const Offset(0, 0),
+              ),
+            ],
           ),
           child: Text(
             'C',
             style: GoogleFonts.rajdhani(
               fontSize: 45,
               fontWeight: FontWeight.w900,
-              color: Colors.black, 
+              color: Colors.black,
             ),
           ),
         ),
@@ -171,7 +142,7 @@ class WelcomeScreen extends ConsumerWidget {
     );
   }
 
-// Hàm build tên thương hiệu
+  // Hàm build tên thương hiệu
   Widget _buildBrandName() {
     return Column(
       children: [
@@ -185,22 +156,26 @@ class WelcomeScreen extends ConsumerWidget {
               // 1. Chữ CAG màu trắng
               const TextSpan(
                 text: "CAG ",
-                style: TextStyle(color: Colors.white), 
+                style: TextStyle(color: Colors.white),
               ),
               // 2. Chữ GUI màu Xanh lợt (Cyan)
               const TextSpan(
                 text: "GUI",
-                style: TextStyle(color: Color(0xFF00E5FF)), // Bác có thể dùng AppTheme.cyanNeon ở đây
+                style: TextStyle(
+                  color: Color(0xFF00E5FF),
+                ), // Bác có thể dùng AppTheme.cyanNeon ở đây
               ),
               // 3. Chữ DE màu Xanh dương
               const TextSpan(
                 text: "DE",
-                style: TextStyle(color: Color(0xFF3B82F6)), // Mã màu xanh dương (bác tự chỉnh lại cho chuẩn màu Figma nhé)
+                style: TextStyle(
+                  color: Color(0xFF3B82F6),
+                ), // Mã màu xanh dương (bác tự chỉnh lại cho chuẩn màu Figma nhé)
               ),
             ],
           ),
         ),
-        const SizedBox(height: 8), 
+        const SizedBox(height: 8),
         Container(
           height: 5,
           width: 110,
@@ -210,46 +185,6 @@ class WelcomeScreen extends ConsumerWidget {
           ),
         ),
       ],
-    );
-  }
-
-// Hàm build nút bấm
-  Widget _buildButton(
-    BuildContext context, {
-    IconData? icon,
-    required String text,
-    required Color color,
-    required Color textColor,
-    required VoidCallback onPressed,
-    bool isBorder = false,
-  }) {
-    return SizedBox(
-      width: double.infinity,
-      height: 60,
-      child: ElevatedButton.icon(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: color,
-          foregroundColor: textColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-            side: isBorder
-                ? const BorderSide(color: AppTheme.textDim, width: 1.5)
-                : BorderSide.none,
-          ),
-        ),
-        icon: icon != null 
-            ? Icon(icon, color: textColor, size: 24)
-            : const SizedBox.shrink(),
-        label: Text(
-          text,
-          style: TextStyle(
-            color: textColor,
-            fontWeight: FontWeight.w900, 
-            fontSize: 16,
-          ),
-        ),
-      ),
     );
   }
 
@@ -263,7 +198,7 @@ class WelcomeScreen extends ConsumerWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const DashboardScreen()),
+                  MaterialPageRoute(builder: (_) => const HomePageScreen()),
                 );
               },
               style: ButtonStyle(

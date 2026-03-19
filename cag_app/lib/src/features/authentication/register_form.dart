@@ -1,14 +1,19 @@
+import 'package:CAG_App/src/common_widgets/cag_primary_button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:CAG_App/src/constants/app_theme.dart';
 import 'package:CAG_App/src/common_widgets/cag_text_field.dart';
-import 'package:CAG_App/src/features/authentication/auth_provider.dart';
+import 'package:CAG_App/src/features/provider/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RegisterForm extends ConsumerStatefulWidget {
   final Color activeColor;
   final bool isGamer;
-  const RegisterForm({super.key, required this.activeColor, required this.isGamer});
+  const RegisterForm({
+    super.key,
+    required this.activeColor,
+    required this.isGamer,
+  });
 
   @override
   ConsumerState<RegisterForm> createState() => _RegisterFormState();
@@ -21,7 +26,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   void _updateHeight() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_formKey.currentContext != null) {
-        final renderBox = _formKey.currentContext!.findRenderObject() as RenderBox;
+        final renderBox =
+            _formKey.currentContext!.findRenderObject() as RenderBox;
         // Cập nhật chiều cao thực tế lên Provider
         ref.read(authFormHeightProvider.notifier).state = renderBox.size.height;
       }
@@ -41,7 +47,14 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
       child: Column(
         key: _formKey,
         children: [
-          Text("TẠO TÀI KHOẢN", style: TextStyle(color: AppTheme.cyanNeon, fontSize: 24, fontWeight: FontWeight.bold)),
+          Text(
+            "TẠO TÀI KHOẢN",
+            style: TextStyle(
+              color: AppTheme.cyanNeon,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 10),
 
           _buildRoleToggle(widget.activeColor),
@@ -129,7 +142,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
 
           CagTextField(
             label: null,
-            hint: "Địa chỉ chi tiết", 
+            hint: "Địa chỉ chi tiết",
             activeColor: AppTheme.cyanNeon,
             borderRadius: 8,
             verticalPadding: 10,
@@ -147,11 +160,17 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                   margin: const EdgeInsets.only(top: 2),
                   decoration: BoxDecoration(
                     color: isAgree ? widget.activeColor : Colors.transparent,
-                    border: Border.all(color: isAgree ? widget.activeColor : Colors.white24),
+                    border: Border.all(
+                      color: isAgree ? widget.activeColor : Colors.white24,
+                    ),
                     borderRadius: BorderRadius.circular(4),
                   ),
-                  child: isAgree 
-                      ? const Icon(Icons.check, size: 14, color: AppTheme.textBlack) 
+                  child: isAgree
+                      ? const Icon(
+                          Icons.check,
+                          size: 14,
+                          color: AppTheme.textBlack,
+                        )
                       : null,
                 ),
               ),
@@ -168,9 +187,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                           color: AppTheme.gold,
                           fontWeight: FontWeight.bold,
                         ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                          },
+                        recognizer: TapGestureRecognizer()..onTap = () {},
                       ),
                     ],
                   ),
@@ -180,27 +197,15 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
           ),
 
           const SizedBox(height: 10),
-          Container(
-            width: double.infinity,
+          CagPrimaryButton(
+            text: "ĐĂNG KÝ",
+            backgroundColor: widget.activeColor,
             height: 45,
-            decoration: BoxDecoration(
-              color: widget.activeColor,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: widget.activeColor.withOpacity(0.3),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                )
-              ]
-            ),
-            child: const Center(
-              child: Text(
-                "ĐĂNG KÝ",
-                style: TextStyle(color: AppTheme.textBlack, fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-            )
-          )
+            borderRadius: 12,
+            onPressed: () {
+              // Xử lý register
+            },
+          ),
         ],
       ),
     );
@@ -209,12 +214,20 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   // Widget _buildRoleToggle để chọn giữa GAMER và CHỦ PHÒNG
   Widget _buildRoleToggle(Color activeColor) {
     return Row(
-        children: [
-          Expanded(child: _roleOption("TÔI LÀ GAME THỦ", widget.isGamer, AppTheme.cyanNeon)),
-          SizedBox(width: 5,),
-          Expanded(child: _roleOption("TÔI LÀ CHỦ QUÁN", !widget.isGamer, AppTheme.gold)),
-        ],
-      );
+      children: [
+        Expanded(
+          child: _roleOption(
+            "TÔI LÀ GAME THỦ",
+            widget.isGamer,
+            AppTheme.cyanNeon,
+          ),
+        ),
+        SizedBox(width: 5),
+        Expanded(
+          child: _roleOption("TÔI LÀ CHỦ QUÁN", !widget.isGamer, AppTheme.gold),
+        ),
+      ],
+    );
   }
 
   // Widget _roleOption để tạo từng lựa chọn vai trò
@@ -228,10 +241,13 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           border: Border.all(
-            color: isSelected ? widget.activeColor : Colors.white10,width: 1.5
+            color: isSelected ? widget.activeColor : Colors.white10,
+            width: 1.5,
           ),
           borderRadius: BorderRadius.circular(10),
-          color: isSelected ? widget.activeColor.withOpacity(0.05) : Colors.transparent,
+          color: isSelected
+              ? widget.activeColor.withOpacity(0.05)
+              : Colors.transparent,
         ),
         child: Text(
           title,
@@ -250,8 +266,12 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   String? _activeFieldId;
   Widget _buildLocationField(WidgetRef ref, bool isProvince) {
     final fieldId = isProvince ? 'province' : 'district';
-    final value = ref.watch(isProvince ? selectedProvinceProvider : selectedDistrictProvider);
-    final items = ref.watch(isProvince ? provinceListProvider : districtListProvider);
+    final value = ref.watch(
+      isProvince ? selectedProvinceProvider : selectedDistrictProvider,
+    );
+    final items = ref.watch(
+      isProvince ? provinceListProvider : districtListProvider,
+    );
 
     return Expanded(
       child: InkWell(
@@ -266,7 +286,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             color: Colors.black26,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: _activeFieldId == fieldId ? AppTheme.cyanNeon : AppTheme.borderWhite,
+              color: _activeFieldId == fieldId
+                  ? AppTheme.cyanNeon
+                  : AppTheme.borderWhite,
               width: _activeFieldId == fieldId ? 1.5 : 1.0,
             ),
           ),
@@ -281,7 +303,11 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                 ),
               ),
               const SizedBox(width: 4),
-              const Icon(Icons.keyboard_arrow_down, color: Colors.white24, size: 20),
+              const Icon(
+                Icons.keyboard_arrow_down,
+                color: Colors.white24,
+                size: 20,
+              ),
             ],
           ),
         ),
@@ -290,7 +316,12 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   }
 
   // Hàm hiện Dialog chọn chuẩn 100% hình mẫu
-  Future<void> _showPicker(WidgetRef ref, bool isProvince, List<String> items, String current) async {
+  Future<void> _showPicker(
+    WidgetRef ref,
+    bool isProvince,
+    List<String> items,
+    String current,
+  ) async {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -299,17 +330,31 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
         contentPadding: EdgeInsets.zero,
         content: Column(
           mainAxisSize: MainAxisSize.min,
-          children: items.map((item) => RadioListTile<String>(
-            title: Text(item, style: const TextStyle(color: Colors.black, fontSize: 15)),
-            value: item,
-            groupValue: current,
-            controlAffinity: ListTileControlAffinity.trailing,
-            activeColor: const Color.fromARGB(255, 24, 171, 44),
-            onChanged: (val) {
-              ref.read(isProvince ? selectedProvinceProvider.notifier : selectedDistrictProvider.notifier).state = val!;
-              Navigator.pop(context);
-            },
-          )).toList(),
+          children: items
+              .map(
+                (item) => RadioListTile<String>(
+                  title: Text(
+                    item,
+                    style: const TextStyle(color: Colors.black, fontSize: 15),
+                  ),
+                  value: item,
+                  groupValue: current,
+                  controlAffinity: ListTileControlAffinity.trailing,
+                  activeColor: const Color.fromARGB(255, 24, 171, 44),
+                  onChanged: (val) {
+                    ref
+                            .read(
+                              isProvince
+                                  ? selectedProvinceProvider.notifier
+                                  : selectedDistrictProvider.notifier,
+                            )
+                            .state =
+                        val!;
+                    Navigator.pop(context);
+                  },
+                ),
+              )
+              .toList(),
         ),
       ),
     );

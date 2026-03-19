@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:CAG_App/src/constants/app_theme.dart';
-import 'package:CAG_App/src/features/authentication/auth_provider.dart';
+import 'package:CAG_App/src/features/provider/auth_provider.dart';
 import 'package:CAG_App/src/features/authentication/login_form.dart';
 import 'package:CAG_App/src/features/authentication/register_form.dart';
 import 'package:flutter/material.dart';

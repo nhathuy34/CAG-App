@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import './widgets/cafe_banner_header.dart';
-import './widgets/cafe_mini_card.dart';
-import '../../common_widgets/hexagon_bottom_nav.dart';
+import 'widgets/cafe_banner_header.dart';
+import 'widgets/cafe_mini_card.dart';
+import '../../../common_widgets/hexagon_bottom_nav.dart';
 import '../zone/zone_screen.dart';
-import '../scan/screen.dart';
+import '../scan/scan_feature.dart';
 
 class CagGuideScreen extends StatefulWidget {
   const CagGuideScreen({super.key});
