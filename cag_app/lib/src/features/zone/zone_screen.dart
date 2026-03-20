@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../common_widgets/hexagon_bottom_nav.dart';
+import '../navigation_provider.dart';
 import '../scan/screen.dart';
-class ZoneScreen extends StatefulWidget {
+import '../../common_widgets/hexagon_bottom_nav.dart';
+
+class ZoneScreen extends ConsumerStatefulWidget {
   const ZoneScreen({super.key});
 
   @override
-  State<ZoneScreen> createState() => _ZoneScreenState();
+  ConsumerState<ZoneScreen> createState() => _ZoneScreenState();
 }
 
-class _ZoneScreenState extends State<ZoneScreen> {
-  int _currentNavIndex = 0;
-
+class _ZoneScreenState extends ConsumerState<ZoneScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,18 +36,19 @@ class _ZoneScreenState extends State<ZoneScreen> {
 
           SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.only(bottom: 80),
+              padding: const EdgeInsets.only(bottom: 100), // Khoảng trống cho navigation bar
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Nút Back
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10, top: 8),
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
-                      onPressed: () => Navigator.of(context).pop(),
+                  // Nút Back - Chỉ hiển thị nếu có thể pop (được push từ nơi khác)
+                  if (Navigator.of(context).canPop())
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, top: 8),
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
                     ),
-                  ),
                   _buildHeader(),
                   _buildNeonButton(),
                   const SizedBox(height: 20),
@@ -163,16 +165,16 @@ class _ZoneScreenState extends State<ZoneScreen> {
         ],
       ),
       bottomNavigationBar: HexagonBottomNav(
-        currentIndex: _currentNavIndex,
+        currentIndex: ref.watch(navigationIndexProvider),
         onTap: (index) {
           if (index == 2) {
+            // Nút hexagon giữa → mở ScanScreen
             Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const ScanScreen()),
             );
           } else {
-            setState(() {
-              _currentNavIndex = index;
-            });
+            // Cập nhật tab qua provider
+            ref.read(navigationIndexProvider.notifier).setIndex(index);
           }
         },
       ),

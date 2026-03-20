@@ -1,45 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import './widgets/cafe_banner_header.dart';
 import './widgets/cafe_mini_card.dart';
-import '../../common_widgets/hexagon_bottom_nav.dart';
-import '../zone/zone_screen.dart';
-import '../scan/screen.dart';
+import '../navigation_provider.dart';
 
-class CagGuideScreen extends StatefulWidget {
+class CagGuideScreen extends ConsumerStatefulWidget {
   const CagGuideScreen({super.key});
 
   @override
-  State<CagGuideScreen> createState() => _CagGuideScreenState();
+  ConsumerState<CagGuideScreen> createState() => _CagGuideScreenState();
 }
 
-class _CagGuideScreenState extends State<CagGuideScreen> {
-  int _currentNavIndex = 0;
-
+class _CagGuideScreenState extends ConsumerState<CagGuideScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF020617),
       body: _buildBody(),
-      bottomNavigationBar: HexagonBottomNav(
-        currentIndex: _currentNavIndex,
-        onTap: (index) {
-          if (index == 2) {
-            // Nút hexagon giữa → mở ScanScreen
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const ScanScreen()),
-            );
-          } else {
-            setState(() {
-              _currentNavIndex = index;
-            });
-          }
-        },
-      ),
     );
   }
 
   Widget _buildBody() {
     return SingleChildScrollView(
+      padding: const EdgeInsets.only(bottom: 100), // Khoảng trống cho navigation bar
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -122,9 +105,8 @@ class _CagGuideScreenState extends State<CagGuideScreen> {
             showPromoBadge: cafe['showPromo'] as bool? ?? false,
             promoText: cafe['promoText'] as String?,
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const ZoneScreen()),
-              );
+              // Chuyển sang màn hình Zone (index 0) thông qua provider
+              ref.read(navigationIndexProvider.notifier).state = 0;
             },
           );
         },
@@ -175,9 +157,8 @@ class _CagGuideScreenState extends State<CagGuideScreen> {
                   showPromoBadge: cafe['showPromo'] as bool? ?? false,
                   promoText: cafe['promoText'] as String?,
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const ZoneScreen()),
-                    );
+                    // Chuyển sang màn hình Zone (index 0) thông qua provider
+                    ref.read(navigationIndexProvider.notifier).state = 0;
                   },
                 );
               },
