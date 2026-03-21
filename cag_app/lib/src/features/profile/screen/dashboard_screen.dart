@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common_widgets/hexagon_bottom_nav.dart';
 import '../../cag_guide/cag_guide_screen.dart';
 import '../../scan/screen.dart';
 import '../../zone/zone_screen.dart';
+import '../../navigation_provider.dart';
 import '../widgets/profile_view.dart'; 
 
-class DashboardScreen extends StatefulWidget {
+class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
-  int _bottomNavIndex = 4; // Mặc định mở Profile
-
+class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   // Danh sách màn hình - Cực kỳ gọn!
   final List<Widget> _mainScreens = [
     const ZoneScreen(),       // 0
@@ -26,19 +26,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bottomNavIndex = ref.watch(navigationIndexProvider);
+
     return Scaffold(
       backgroundColor: const Color(0xFF050A15),
       body: Stack(
         children: [
           IndexedStack(
-            index: _bottomNavIndex,
+            index: bottomNavIndex,
             children: _mainScreens,
           ),
           Positioned(
             left: 0, right: 0, bottom: 0,
             child: HexagonBottomNav(
-              currentIndex: _bottomNavIndex,
-              onTap: (index) => setState(() => _bottomNavIndex = index),
+              currentIndex: bottomNavIndex,
+              onTap: (index) => ref.read(navigationIndexProvider.notifier).state = index,
             ),
           ),
         ],
