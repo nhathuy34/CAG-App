@@ -1,25 +1,16 @@
-import 'package:CAG_App/src/models/gamerStats.dart';
+import 'package:CAG_App/src/models/gamer_stats.dart';
+import 'package:CAG_App/src/models/user_model.dart';
 import 'package:CAG_App/src/utils/storage_helper.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 
-final profileTabIndexProvider = StateProvider<int>((ref) => 0);
-
-final userStatsProvider =
-    StateNotifierProvider<UserStatsNotifier, AsyncValue<GamerStats>>((ref) {
-      return UserStatsNotifier();
-    });
-
-class UserStatsNotifier extends StateNotifier<AsyncValue<GamerStats>> {
-  UserStatsNotifier() : super(const AsyncValue.loading()) {
-    loadStats();
-  }
-
-  // Hàm đọc dữ liệu từ StorageHelper
-  Future<void> loadStats() async {
+class GamerRepository {
+  // --- XỬ LÝ GAMER STATS ---
+  Future<GamerStats> fetchUserStats() async {
     try {
+      // Giả lập delay mạng
+      await Future.delayed(const Duration(milliseconds: 500));
       final stats = await StorageHelper.loadAllStats();
-      // Nếu app mới chưa có card, ta thêm mock data
+
+      // Khởi tạo Mock Data nếu chưa có
       if (stats.linkedCards.isEmpty || stats.lootBoxes.isEmpty) {
         final initialStats = GamerStats(
           trustScore: '100',
@@ -78,27 +69,37 @@ class UserStatsNotifier extends StateNotifier<AsyncValue<GamerStats>> {
           ],
         );
         await StorageHelper.saveAllStats(initialStats);
-        state = AsyncValue.data(initialStats);
-      } else {
-        state = AsyncValue.data(stats);
+        return initialStats;
       }
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
+      return stats;
+    } catch (e) {
+      throw Exception('Lỗi khi tải dữ liệu Gamer: $e');
     }
   }
 
-  // Future<void> updateBalance(String newBalance) async {
-  //   if (state.hasValue) {
-  //     final updated = GamerStats(
-  //       trustScore: state.value!.trustScore,
-  //       hoursPlayed: state.value!.hoursPlayed,
-  //       winRate: state.value!.winRate,
-  //       balance: newBalance,
-  //       accessId: state.value!.accessId,
-  //       linkedCards: state.value!.linkedCards,
-  //     );
-  //     await StorageHelper.saveAllStats(updated);
-  //     state = AsyncValue.data(updated);
-  //   }
-  // }
+  Future<void> updateUserStats(GamerStats stats) async {
+    await StorageHelper.saveAllStats(stats);
+  }
+
+  // --- XỬ LÝ USER PROFILE ---
+  Future<Usermodel> fetchUserProfile() async {
+    final user = await StorageHelper.loadUserProfile();
+    if (user != null) return user;
+
+    return Usermodel(
+      userType: 1,
+      fullName: "Lương Quang Vinh",
+      phoneNumber: "0987654321",
+      email: "vinh@cag.vn",
+      username: "luongvinh",
+      password: "",
+      province: "",
+      commune: "",
+      district: "",
+    );
+  }
+
+  Future<void> updateUserProfile(Usermodel user) async {
+    await StorageHelper.saveUserProfile(user);
+  }
 }

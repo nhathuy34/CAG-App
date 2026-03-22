@@ -1,7 +1,7 @@
 import 'package:CAG_App/src/common_widgets/cag_primary_button.dart';
 import 'package:CAG_App/src/constants/app_theme.dart';
-import 'package:CAG_App/src/features/GAMER/homepage_screen.dart';
-import 'package:CAG_App/src/features/authentication/auth_screen.dart';
+import 'package:CAG_App/src/features/GAMER/home/screens/homepage_screen.dart';
+import 'package:CAG_App/src/features/authentication/screens/auth_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,12 +15,10 @@ class WelcomeScreen extends ConsumerWidget {
       backgroundColor: AppTheme.darkBg,
       body: Stack(
         children: [
-          // Hình nền
           Positioned.fill(
             child: Image.asset('assets/welcome.png', fit: BoxFit.cover),
           ),
 
-          // Lớp phủ mờ đen để làm nổi bật nội dung
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
@@ -33,7 +31,6 @@ class WelcomeScreen extends ConsumerWidget {
             ),
           ),
 
-          // Nội dung chính
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -74,7 +71,6 @@ class WelcomeScreen extends ConsumerWidget {
 
                   const SizedBox(height: 15),
 
-                  // Thay thế nút Đăng ký mới
                   CagPrimaryButton(
                     text: "ĐĂNG KÝ MỚI",
                     isBorder: true,
@@ -109,7 +105,6 @@ class WelcomeScreen extends ConsumerWidget {
   }
 
   Widget _buildLogo() {
-    // Bọc Padding ở ngoài cùng để ánh sáng có không gian tỏa ra
     return Padding(
       padding: const EdgeInsets.all(
         10.0,
@@ -153,19 +148,16 @@ class WelcomeScreen extends ConsumerWidget {
               fontWeight: FontWeight.w900,
             ),
             children: [
-              // 1. Chữ CAG màu trắng
               const TextSpan(
                 text: "CAG ",
                 style: TextStyle(color: Colors.white),
               ),
-              // 2. Chữ GUI màu Xanh lợt (Cyan)
               const TextSpan(
                 text: "GUI",
                 style: TextStyle(
                   color: Color(0xFF00E5FF),
                 ), // Bác có thể dùng AppTheme.cyanNeon ở đây
               ),
-              // 3. Chữ DE màu Xanh dương
               const TextSpan(
                 text: "DE",
                 style: TextStyle(

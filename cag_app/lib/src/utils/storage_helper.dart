@@ -1,19 +1,18 @@
 import 'dart:convert';
 
-import 'package:CAG_App/src/models/gamerStats.dart';
+import 'package:CAG_App/src/models/gamer_stats.dart';
+import 'package:CAG_App/src/models/user_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class StorageHelper {
   // Sử dụng FlutterSecureStorage để lưu trữ an toàn token và role
   static const _storage = FlutterSecureStorage(
-    aOptions: AndroidOptions(
-      encryptedSharedPreferences: true,
-    ),
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
   );
 
   static const String _keyToken = 'jwt_token';
   static const String _keyRole = 'role';
-
+  static const String _keyUserData = 'user_data_profile';
   // // Keys cho Profile
   static const String _keyTrustScore = 'trust_score';
   static const String _keyHoursPlayed = 'hours_played';
@@ -46,9 +45,7 @@ class StorageHelper {
 
   // Hàm xóa dữ liệu đăng nhập khi người dùng đăng xuất
   static Future<void> clearAuthData() async {
-    await Future.wait([
-      _storage.deleteAll(),
-    ]);
+    await Future.wait([_storage.deleteAll()]);
   }
 
   // Hàm tiện ích để kiểm tra xem người dùng đã đăng nhập hay chưa
@@ -65,8 +62,14 @@ class StorageHelper {
       _storage.write(key: _keyHoursPlayed, value: stats.hoursPlayed),
       _storage.write(key: _keyWinRate, value: stats.winRate),
       _storage.write(key: _keyAccessId, value: stats.accessId),
-      _storage.write(key: _keyCards, value: jsonEncode(stats.linkedCards.map((e) => e.toJson()).toList())),
-      _storage.write(key: _keyLootbox, value: jsonEncode(stats.lootBoxes.map((e) => e.toJson()).toList())),
+      _storage.write(
+        key: _keyCards,
+        value: jsonEncode(stats.linkedCards.map((e) => e.toJson()).toList()),
+      ),
+      _storage.write(
+        key: _keyLootbox,
+        value: jsonEncode(stats.lootBoxes.map((e) => e.toJson()).toList()),
+      ),
     ]);
   }
 
@@ -78,10 +81,14 @@ class StorageHelper {
     List<MembershipCard> cards = [];
     List<LootBoxItem> items = [];
     if (cardsJson != null) {
-      cards = (jsonDecode(cardsJson) as List).map((e) => MembershipCard.fromJson(e)).toList();
+      cards = (jsonDecode(cardsJson) as List)
+          .map((e) => MembershipCard.fromJson(e))
+          .toList();
     }
-    if (lootboxJson != null){
-      items = (jsonDecode(lootboxJson) as List).map((e) => LootBoxItem.fromJson(e)).toList();
+    if (lootboxJson != null) {
+      items = (jsonDecode(lootboxJson) as List)
+          .map((e) => LootBoxItem.fromJson(e))
+          .toList();
     }
 
     return GamerStats(
@@ -93,5 +100,27 @@ class StorageHelper {
       linkedCards: cards,
       lootBoxes: items,
     );
+  }
+
+  // Hàm đọc/ghi chuỗi cơ bản cho Provider gọi
+  static Future<String?> loadString(String key) async {
+    return await _storage.read(key: key);
+  }
+  static Future<void> saveString(String key, String value) async {
+    await _storage.write(key: key, value: value);
+  }
+
+  // Hàm lưu thông tin profile
+  static Future<void> saveUserProfile(Usermodel user) async {
+    await _storage.write(key: _keyUserData, value: jsonEncode(user.toJson()));
+  }
+
+  // Hàm load thông tin profile
+  static Future<Usermodel?> loadUserProfile() async{
+    final jsonString=await _storage.read(key: _keyUserData);
+    if(jsonString !=null){
+      return Usermodel.fromJson(jsonDecode(jsonString));
+    }
+    return null;
   }
 }

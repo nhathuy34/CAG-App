@@ -86,7 +86,7 @@ class LootBoxItem {
   });
 
   factory LootBoxItem.fromJson(Map<String, dynamic> json) => LootBoxItem(
-    id: json['ud'] ?? '',
+    id: json['id'] ?? '',
     tag: json['tag'] ?? '',
     title: json['title'] ?? '',
     price: json['price'] ?? '0',

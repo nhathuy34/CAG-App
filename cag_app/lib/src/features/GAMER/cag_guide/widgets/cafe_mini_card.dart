@@ -1,28 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:CAG_App/src/models/cafe.dart';
 
 class CafeMiniCard extends StatelessWidget {
-  final String cafeName;
-  final String matchScore;
-  final String pcCount;
-  final String ram;
-  final String imageUrl;
-  final bool showRankBadge;
-  final int? rankNumber;
-  final bool showPromoBadge;
-  final String? promoText;
+  final Cafe cafe;
   final VoidCallback? onTap;
 
   const CafeMiniCard({
     super.key,
-    required this.cafeName,
-    required this.matchScore,
-    required this.pcCount,
-    required this.ram,
-    required this.imageUrl,
-    this.showRankBadge = false,
-    this.rankNumber,
-    this.showPromoBadge = false,
-    this.promoText,
+    required this.cafe,
     this.onTap,
   });
 
@@ -43,7 +28,7 @@ class CafeMiniCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  imageUrl,
+                  cafe.image,
                   width: 150,
                   height: 100,
                   fit: BoxFit.cover,
@@ -77,7 +62,7 @@ class CafeMiniCard extends StatelessWidget {
               ),
 
               // Badge Rank (TOP 10) - nếu có
-              if (showRankBadge && rankNumber != null)
+              if (cafe.showRank && cafe.rankNumber != null)
                 Positioned(
                   top: 24,
                   left: 6,
@@ -88,16 +73,16 @@ class CafeMiniCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(3),
                     ),
                     child: Text(
-                      'TOP $rankNumber',
+                      'TOP ${cafe.rankNumber}',
                       style: const TextStyle(color: Colors.black, fontSize: 7, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
 
               // Badge Promo (NẠP TẶNG $) - nếu có
-              if (showPromoBadge && promoText != null)
+              if (cafe.showPromo && cafe.promoText != null)
                 Positioned(
-                  top: showRankBadge ? 42 : 24,
+                  top: cafe.showRank ? 42 : 24,
                   left: 6,
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
@@ -106,7 +91,7 @@ class CafeMiniCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(3),
                     ),
                     child: Text(
-                      promoText!,
+                      cafe.promoText!,
                       style: const TextStyle(color: Colors.white, fontSize: 7, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -118,7 +103,7 @@ class CafeMiniCard extends StatelessWidget {
 
           // Tên quán
           Text(
-            cafeName.toUpperCase(),
+            cafe.name.toUpperCase(),
             style: const TextStyle(
               color: Colors.white,
               fontSize: 12,
@@ -134,15 +119,15 @@ class CafeMiniCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                '$matchScore ',
+                '${cafe.match} ',
                 style: const TextStyle(color: Color(0xFF16A34A), fontSize: 10, fontWeight: FontWeight.bold),
               ),
               const Text('Match', style: TextStyle(color: Color(0xFF16A34A), fontSize: 10)),
               const SizedBox(width: 8),
-              _specBadge(pcCount),
+              _specBadge(cafe.pc),
               const Text(' PC', style: TextStyle(color: Colors.white54, fontSize: 9)),
               const SizedBox(width: 6),
-              _specBadge(ram),
+              _specBadge(cafe.ram),
             ],
           ),
         ],

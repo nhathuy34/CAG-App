@@ -1,22 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:CAG_App/src/models/cafe.dart';
 
 class CafeBannerHeader extends StatelessWidget {
-  final String cafeName;
-  final String matchPercentage;
-  final String year;
-  final String ram;
-  final String pcCount;
-  final String imageUrl;
+  final Cafe cafe;
 
   const CafeBannerHeader({
     super.key,
-    required this.cafeName,
-    required this.matchPercentage,
-    required this.year,
-    required this.ram,
-    required this.pcCount,
-    required this.imageUrl,
+    required this.cafe,
   });
 
   @override
@@ -28,7 +19,7 @@ class CafeBannerHeader extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           Image.network(
-            imageUrl,
+            cafe.image,
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) => Container(color: Colors.grey[900]),
           ),
@@ -120,7 +111,7 @@ class CafeBannerHeader extends StatelessWidget {
                     const SizedBox(height: 8),
                     
                     Text(
-                      cafeName.toUpperCase(),
+                      cafe.name.toUpperCase(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 26,
@@ -133,13 +124,13 @@ class CafeBannerHeader extends StatelessWidget {
 
                     Row(
                       children: [
-                        Text('$matchPercentage Match', style: const TextStyle(color: Color(0xFF16A34A), fontWeight: FontWeight.bold, fontSize: 13)), // Success Green
+                        Text('${cafe.match} Match', style: const TextStyle(color: Color(0xFF16A34A), fontWeight: FontWeight.bold, fontSize: 13)), // Success Green
                         const SizedBox(width: 16),
-                        _buildSpecText(year),
+                        _buildSpecText(cafe.year ?? '2024'),
                         const SizedBox(width: 12),
-                        _buildSpecText(ram, withBorder: true),
+                        _buildSpecText(cafe.ram, withBorder: true),
                         const SizedBox(width: 12),
-                        _buildSpecText('$pcCount PC'),
+                        _buildSpecText('${cafe.pc} PC'),
                       ],
                     ),
                     const SizedBox(height: 16),

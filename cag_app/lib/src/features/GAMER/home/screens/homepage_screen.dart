@@ -1,7 +1,8 @@
-import 'package:CAG_App/src/features/GAMER/profile/screen/profile_screen.dart';
+import 'package:CAG_App/src/features/GAMER/profile/screens/profile_screen.dart';
+import 'package:CAG_App/src/features/GAMER/cag_guide/screens/cag_guide_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:CAG_App/src/features/provider/nav_provider.dart';
+import 'package:CAG_App/src/features/GAMER/home/providers/nav_provider.dart';
 import 'package:CAG_App/src/common_widgets/hexagon_bottom_nav.dart';
 
 class HomePageScreen extends ConsumerWidget {
@@ -19,12 +20,12 @@ class HomePageScreen extends ConsumerWidget {
           // Lớp dưới: Nội dung màn hình
           IndexedStack(
             index: navIndex,
-            children: const [
-              Center(child: Text("Cộng đồng")),
-              Center(child: Text("Cloud Save")),
-              Center(child: Text("Scan")),
-              Center(child: Text("CAG Guide")),
-              ProfileScreen(),
+            children: [
+              const Center(child: Text("Cộng đồng")),
+              const Center(child: Text("Cloud Save")),
+              const Center(child: Text("Scan")),
+              CagGuideScreen(),
+              const ProfileScreen(),
             ],
           ),
 

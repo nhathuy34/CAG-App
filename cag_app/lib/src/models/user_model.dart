@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Usermodel {
   final int userType;
   final String fullName;
@@ -51,6 +49,17 @@ class Usermodel {
     };
   }
 
-  @override
-  String toString() => jsonEncode(toJson());
+  Usermodel copyWith({String? fullName, String? phoneNumber}) {
+    return Usermodel(
+      userType: userType,
+      fullName: fullName ?? this.fullName,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      email: email,
+      username: username,
+      password: password,
+      province: province,
+      commune: commune,
+      district: district,
+    );
+  }
 }

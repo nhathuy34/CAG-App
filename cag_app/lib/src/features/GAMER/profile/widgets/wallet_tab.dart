@@ -1,7 +1,7 @@
 import 'package:CAG_App/src/common_widgets/cag_primary_button.dart';
 import 'package:CAG_App/src/constants/app_theme.dart';
-import 'package:CAG_App/src/features/provider/profile_provider.dart';
-import 'package:CAG_App/src/models/gamerStats.dart';
+import 'package:CAG_App/src/features/GAMER/profile/providers/profile_provider.dart';
+import 'package:CAG_App/src/models/gamer_stats.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';

@@ -1,7 +1,7 @@
 import 'package:CAG_App/src/common_widgets/cag_primary_button.dart';
 import 'package:CAG_App/src/common_widgets/cag_text_field.dart';
 import 'package:CAG_App/src/constants/app_theme.dart';
-import 'package:CAG_App/src/features/provider/auth_provider.dart';
+import 'package:CAG_App/src/features/authentication/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

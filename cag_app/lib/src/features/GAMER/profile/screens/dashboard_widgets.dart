@@ -1,4 +1,5 @@
-import 'package:CAG_App/src/features/provider/profile_provider.dart';
+import 'package:CAG_App/src/features/GAMER/profile/providers/profile_provider.dart';
+import 'package:CAG_App/src/constants/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
