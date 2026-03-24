@@ -1,5 +1,6 @@
 import 'package:CAG_App/src/features/GAMER/profile/screens/profile_screen.dart';
 import 'package:CAG_App/src/features/GAMER/cag_guide/screens/cag_guide_screen.dart';
+import 'package:CAG_App/src/features/GAMER/scan/screens/scan_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:CAG_App/src/features/GAMER/home/providers/nav_provider.dart';
@@ -23,9 +24,9 @@ class HomePageScreen extends ConsumerWidget {
             children: [
               const Center(child: Text("Cộng đồng")),
               const Center(child: Text("Cloud Save")),
-              const Center(child: Text("Scan")),
+              ScanScreen(),
               CagGuideScreen(),
-              const ProfileScreen(),
+              ProfileScreen(),
             ],
           ),
 
