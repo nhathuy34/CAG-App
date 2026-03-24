@@ -1,4 +1,3 @@
-import 'package:CAG_App/src/common_widgets/cag_primary_button.dart';
 import 'package:CAG_App/src/constants/app_theme.dart';
 import 'package:CAG_App/src/features/GAMER/profile/providers/profile_provider.dart';
 import 'package:CAG_App/src/models/gamer_stats.dart';
@@ -28,146 +27,182 @@ class LootBoxTab extends ConsumerWidget {
           );
         }
 
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            double itemWidth = (constraints.maxWidth - 16) / 2;
-            double itemHeight = itemWidth * 1.35;
-            return GridView.builder(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.only(bottom: 100),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: itemWidth / itemHeight,
-              ),
-              itemCount: stats.lootBoxes.length,
-              itemBuilder: (context, index) {
-                return _buildLootCard(context, stats.lootBoxes[index]);
-              },
-            );
+        // Dùng GridView thay vì LayoutBuilder phức tạp
+        return GridView.builder(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.only(bottom: 100, left: 20, right: 20, top: 16),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 16,
+            childAspectRatio: 0.78, // Tỉ lệ chiều rộng/chiều cao để giống ảnh mẫu
+          ),
+          itemCount: stats.lootBoxes.length,
+          itemBuilder: (context, index) {
+            return _LootCard(item: stats.lootBoxes[index]);
           },
         );
       },
     );
   }
+}
 
-  Widget _buildLootCard(BuildContext context, LootBoxItem item) {
-    return Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: AppTheme.cardBlue,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.borderWhite),
-      ),
-      child: Stack(
-        children: [
-          // Background Image
-          Positioned.fill(
-            child: Image.network(
-              item.imagePath,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-                  Container(color: AppTheme.cardBg),
-            ),
+// ==========================================
+// WIDGET THẺ LOOTBOX (CÓ HIỆU ỨNG NHẤN ĐỔI MÀU)
+// ==========================================
+class _LootCard extends StatefulWidget {
+  final LootBoxItem item;
+  const _LootCard({required this.item});
+
+  @override
+  State<_LootCard> createState() => _LootCardState();
+}
+
+class _LootCardState extends State<_LootCard> {
+  bool _isCardPressed = false;
+  bool _isClaimPressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      // Bắt sự kiện nhấn xuống và nhả ra cho toàn bộ Thẻ
+      onTapDown: (_) => setState(() => _isCardPressed = true),
+      onTapUp: (_) => setState(() => _isCardPressed = false),
+      onTapCancel: () => setState(() => _isCardPressed = false),
+      onTap: () {
+        // Logic khi click vào thẻ Lootbox
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 100),
+        padding: const EdgeInsets.all(6), // Khoảng hở giữa viền và nội dung (như ảnh)
+        decoration: BoxDecoration(
+          color: const Color(0xFF141924), // Màu nền thẻ xanh đen mờ
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            // CHỖ NÀY: Viền màu vàng khi nhấn, màu xám khi bình thường
+            color: _isCardPressed ? const Color(0xFFFFC107) : const Color(0xFF2A3241),
+            width: _isCardPressed ? 1.5 : 1,
           ),
-
-          // Tag (FOOD/HOURS)
-          Positioned(
-            top: 10,
-            left: 10,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.7),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Text(
-                item.tag,
-                style: GoogleFonts.rajdhani(
-                  color: AppTheme.textWhite,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-
-          // Bottom Info
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [
-                    Colors.black,
-                    Colors.black.withOpacity(0.8),
-                    Colors.transparent,
-                  ],
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
+          boxShadow: _isCardPressed 
+              ? [BoxShadow(color: const Color(0xFFFFC107).withOpacity(0.2), blurRadius: 10)] 
+              : [],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 1. ẢNH NỀN VÀ TAG
+            Expanded(
+              child: Stack(
                 children: [
-                  Text(
-                    item.title,
-                    style: GoogleFonts.rajdhani(
-                      color: AppTheme.textWhite,
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
+                  // Ảnh
+                  Container(
+                    width: double.infinity,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: const Color(0xFF1E2532),
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    child: Image.network(
+                      widget.item.imagePath,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.image, color: Colors.white24),
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        item.price,
+                  // Tag (HOURS / FOOD / CARD)
+                  Positioned(
+                    top: 6,
+                    left: 6,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.85),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        widget.item.tag.toUpperCase(),
                         style: GoogleFonts.rajdhani(
-                          color: AppTheme.statsOrange,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(
-                        width: 75,
-                        child: Theme(
-                          data: Theme.of(context).copyWith(
-                            elevatedButtonTheme: ElevatedButtonThemeData(
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 4,
-                                ),
-                              ),
-                            ),
-                          ),
-                          child: CagPrimaryButton(
-                            text: 'CLAIM',
-                            onPressed: () {},
-                            backgroundColor: AppTheme.cardBlue,
-                            pressedColor: AppTheme.gold,
-                            textColor: AppTheme.textWhite,
-                            height: 25,
-                            fontSize: 8,
-                            borderRadius: 1,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+            
+            const SizedBox(height: 10),
+            
+            // 2. TIÊU ĐỀ
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Text(
+                widget.item.title.toUpperCase(),
+                style: GoogleFonts.rajdhani(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            
+            const SizedBox(height: 8),
+            
+            // 3. GIÁ VÀ NÚT CLAIM
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Giá (Màu vàng)
+                  Text(
+                    widget.item.price, // Ví dụ: "500 P"
+                    style: GoogleFonts.rajdhani(
+                      color: const Color(0xFFFFC107), // Vàng cam
+                      fontSize: 14,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  
+                  // Nút CLAIM có hiệu ứng đổi màu
+                  GestureDetector(
+                    // Bắt sự kiện nhấn xuống và nhả ra cho nút CLAIM
+                    onTapDown: (_) => setState(() => _isClaimPressed = true),
+                    onTapUp: (_) => setState(() => _isClaimPressed = false),
+                    onTapCancel: () => setState(() => _isClaimPressed = false),
+                    onTap: () {
+                      // Xử lý logic CLAIM phần thưởng ở đây
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 100),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        // CHỖ NÀY: Nút đổi sang vàng khi nhấn
+                        color: _isClaimPressed ? const Color(0xFFFFC107) : const Color(0xFF1E2532),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        'CLAIM',
+                        style: GoogleFonts.rajdhani(
+                          // Chữ đổi sang đen khi nền vàng để dễ đọc
+                          color: _isClaimPressed ? Colors.black : Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 4),
+          ],
+        ),
       ),
     );
   }

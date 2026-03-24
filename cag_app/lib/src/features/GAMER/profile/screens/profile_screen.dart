@@ -1,5 +1,6 @@
 import 'package:CAG_App/src/common_widgets/cag_primary_button.dart';
 import 'package:CAG_App/src/constants/app_theme.dart';
+import 'package:CAG_App/src/features/GAMER/home/providers/nav_provider.dart';
 import 'package:CAG_App/src/features/GAMER/profile/providers/profile_provider.dart';
 import 'package:CAG_App/src/features/GAMER/profile/screens/dashboard_widgets.dart';
 import 'package:CAG_App/src/features/GAMER/profile/widgets/lootbox_tab.dart';
@@ -29,7 +30,9 @@ class ProfileScreen extends ConsumerWidget {
                 const SizedBox(height: 24),
                 CagPrimaryButton(
                   text: "FIND MATCH",
-                  onPressed: () {},
+                  onPressed: () {
+                    ref.read(navIndexProvider.notifier).state = 3;
+                  },
                   backgroundColor: Colors.transparent,
                   textColor: AppTheme.cyanNeon,
                   isBorder: true,
@@ -64,7 +67,7 @@ class ProfileScreen extends ConsumerWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _buildAvatarStack(),
+        _buildAvatarStack(userProfileAsync),
         const SizedBox(width: 32),
         Expanded(
           child: userProfileAsync.when(
@@ -77,20 +80,39 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildAvatarStack() {
+  Widget _buildAvatarStack(AsyncValue userProfileAsync) {
+    final String avatarUrl = userProfileAsync.when(
+      data: (user) => user.avatarUrl ?? 'https://picsum.photos/200',
+      loading: () => 'https://picsum.photos/200',
+      error: (_, __) => 'https://picsum.photos/200',
+    );
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.bottomRight,
       children: [
         Container(
-          width: 70, height: 70,
+          width: 70, 
+          height: 70,
+          padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: AppTheme.statsBlue, width: 2),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(6),
-            child: const Center(child: Icon(Icons.person, size: 40, color: Colors.white54)),
+            child: Image.network(
+              avatarUrl,
+              fit: BoxFit.cover,
+              key: ValueKey(avatarUrl), // Key này cực quan trọng để update ảnh
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return const Center(
+                  child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.cyanNeon),
+                );
+              },
+              errorBuilder: (context, error, stackTrace) => 
+                const Center(child: Icon(Icons.person, size: 40, color: Colors.white54)),
+            ),
           ),
         ),
         Positioned(

@@ -63,12 +63,14 @@ class UserProfileNotifier extends StateNotifier<AsyncValue<Usermodel>> {
   Future<void> updateProfile({
     required String name,
     required String phone,
+    String? avatar,
   }) async {
     if (state is AsyncData) {
       final currentUser = state.value!;
       final updatedUser = currentUser.copyWith(
         fullName: name,
         phoneNumber: phone,
+        avatarUrl: avatar,
       );
       await _repository.updateUserProfile(updatedUser);
       state = AsyncValue.data(updatedUser);

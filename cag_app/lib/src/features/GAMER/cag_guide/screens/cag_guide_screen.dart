@@ -4,6 +4,7 @@ import 'package:CAG_App/src/models/cafe.dart';
 import '../widgets/cafe_banner_header.dart';
 import '../widgets/cafe_mini_card.dart';
 import '../providers/cag_guide_provider.dart';
+import '../../zone/screens/zone_screen.dart';
 
 class CagGuideScreen extends ConsumerWidget {
   const CagGuideScreen({super.key});
@@ -68,8 +69,8 @@ class CagGuideScreen extends ConsumerWidget {
   Widget _buildTopTrendingSection(WidgetRef ref) {
     final cafesAsync = ref.watch(topTrendingCafesProvider);
     return cafesAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, _) => Center(child: Text('Error: $err')),
+      loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFF00F2EA))),
+      error: (err, _) => Center(child: Text('Error: $err', style: const TextStyle(color: Colors.red))),
       data: (cafes) => _buildHorizontalCafeList(cafes),
     );
   }
@@ -77,8 +78,8 @@ class CagGuideScreen extends ConsumerWidget {
   Widget _buildRtx40Section(WidgetRef ref) {
     final cafesAsync = ref.watch(rtx40CafesProvider);
     return cafesAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, _) => Center(child: Text('Error: $err')),
+      loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFF00F2EA))),
+      error: (err, _) => Center(child: Text('Error: $err', style: const TextStyle(color: Colors.red))),
       data: (cafes) => _buildHorizontalCafeList(cafes),
     );
   }
@@ -86,8 +87,8 @@ class CagGuideScreen extends ConsumerWidget {
   Widget _buildCoupleZoneSection(WidgetRef ref) {
     final cafesAsync = ref.watch(coupleZoneCafesProvider);
     return cafesAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, _) => Center(child: Text('Error: $err')),
+      loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFF00F2EA))),
+      error: (err, _) => Center(child: Text('Error: $err', style: const TextStyle(color: Colors.red))),
       data: (cafes) => _buildHorizontalCafeList(cafes),
     );
   }
@@ -95,8 +96,8 @@ class CagGuideScreen extends ConsumerWidget {
   Widget _buildDiamondSection(WidgetRef ref) {
     final cafesAsync = ref.watch(diamondCafesProvider);
     return cafesAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, _) => Center(child: Text('Error: $err')),
+      loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFF00F2EA))),
+      error: (err, _) => Center(child: Text('Error: $err', style: const TextStyle(color: Colors.red))),
       data: (cafes) => _buildDiamondList(cafes),
     );
   }
@@ -130,9 +131,10 @@ class CagGuideScreen extends ConsumerWidget {
           return CafeMiniCard(
             cafe: cafe,
             onTap: () {
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(builder: (_) => const ZoneScreen()),
-              // );
+              // ĐÃ MỞ KHÓA CHUYỂN TRANG
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const ZoneScreen()),
+              );
             },
           );
         },
@@ -175,9 +177,10 @@ class CagGuideScreen extends ConsumerWidget {
                 return CafeMiniCard(
                   cafe: cafe,
                   onTap: () {
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(builder: (_) => const ZoneScreen()),
-                    // );
+                    // ĐÃ MỞ KHÓA CHUYỂN TRANG
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const ZoneScreen()),
+                    );
                   },
                 );
               },

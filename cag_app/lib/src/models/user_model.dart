@@ -8,6 +8,7 @@ class Usermodel {
   final String province;
   final String commune;
   final String district;
+  final String? avatarUrl;
 
   Usermodel({
     required this.userType,
@@ -19,6 +20,7 @@ class Usermodel {
     required this.province,
     required this.commune,
     required this.district,
+    this.avatarUrl,
   });
 
   factory Usermodel.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class Usermodel {
       province: json['province'] as String? ?? "",
       commune: json['commune'] as String? ?? "",
       district: json['district'] as String? ?? "",
+      avatarUrl: json['avatarUrl'] as String?,
     );
   }
 
@@ -46,10 +49,11 @@ class Usermodel {
       'province': province,
       'commune': commune,
       'district': district,
+      'avatarUrl': avatarUrl,
     };
   }
 
-  Usermodel copyWith({String? fullName, String? phoneNumber}) {
+  Usermodel copyWith({String? fullName, String? phoneNumber,String? avatarUrl}) {
     return Usermodel(
       userType: userType,
       fullName: fullName ?? this.fullName,
@@ -60,6 +64,7 @@ class Usermodel {
       province: province,
       commune: commune,
       district: district,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
     );
   }
 }

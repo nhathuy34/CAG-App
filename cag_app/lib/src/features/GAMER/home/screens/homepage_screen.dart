@@ -12,36 +12,37 @@ class HomePageScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final navIndex = ref.watch(navIndexProvider);
+    // Kiểm tra xem có đang ở trang Scan (Index 2) hay không
+    final bool isScanPage = navIndex == 2;
 
     return Scaffold(
       backgroundColor: const Color(0xFF0b0e14),
-      // Dùng Stack để BottomNav luôn nổi lên trên cùng (Z-index cao hơn)
       body: Stack(
         children: [
-          // Lớp dưới: Nội dung màn hình
           IndexedStack(
             index: navIndex,
-            children: [
-              const Center(child: Text("Cộng đồng")),
-              const Center(child: Text("Cloud Save")),
-              ScanScreen(),
+            children: const [
+              Center(child: Text("Cộng đồng", style: TextStyle(color: Colors.white))),
+              Center(child: Text("Cloud Save", style: TextStyle(color: Colors.white))),
+              ScanScreen(), 
               CagGuideScreen(),
               ProfileScreen(),
             ],
           ),
 
-          // Lớp trên: Thanh điều hướng
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: HexagonBottomNav(
-              currentIndex: navIndex,
-              onTap: (index) {
-                ref.read(navIndexProvider.notifier).state = index;
-              },
+         
+          if (!isScanPage) 
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: HexagonBottomNav(
+                currentIndex: navIndex,
+                onTap: (index) {
+                  ref.read(navIndexProvider.notifier).state = index;
+                },
+              ),
             ),
-          ),
         ],
       ),
     );
