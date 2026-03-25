@@ -4,86 +4,89 @@ import 'package:CAG_App/src/features/authentication/providers/auth_provider.dart
 import 'package:CAG_App/src/features/authentication/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SlashScreen extends ConsumerWidget {
   const SlashScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Lắng nghe trạng thái Token
+    ref.listen(authCheckerProvider, (previous, next) {
+      next.whenData((role) {
+        if (role != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const HomePageScreen()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+          );
+        }
+      });
+    });
+
     final authState = ref.watch(authCheckerProvider);
 
     return Scaffold(
-      backgroundColor: AppTheme.darkBg,
+      backgroundColor: const Color(0xFF0B0E14), 
       body: authState.when(
         loading: () => _buildSplashUI(),
-
         error: (err, stack) => const WelcomeScreen(),
-
-        data: (role){
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (role != null) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const HomePageScreen(),
-                ),
-              );
-            } else {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const WelcomeScreen()),
-              );
-            }
-          });
-          return _buildSplashUI();
-        }
+        data: (_) => _buildSplashUI(), 
       ),
     );
   }
 
   Widget _buildSplashUI() {
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: Image.asset(
+    return Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        gradient: RadialGradient(
+          colors: [
+            Color(0xFF1E2330), // Sáng nhẹ ở tâm
+            Color(0xFF0B0E14), // Đen dần ra viền
+          ],
+          radius: 1.2,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
             'assets/CAGPRO_logoonly.png',
-            fit: BoxFit.cover,
+            width: 160, 
+            fit: BoxFit.contain,
           ),
-        ),
+          const SizedBox(height: 60),
 
-        Positioned.fill(
-          child: Container(
-            color: Colors.black.withOpacity(0.5),
-          )
-        ),
-
-        SafeArea(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // loading indicator
-                const CircularProgressIndicator(
-                  color: Colors.cyan,
-                  strokeWidth: 4,
-                ),
-                const SizedBox(height: 20),
-
-                const Text(
-                  "Welcome to CAG App",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
-                  ),
-                ),
-              ],
+          
+          Text(
+            "SYSTEM INITIALIZING...",
+            style: GoogleFonts.ibmPlexMono(
+              color: AppTheme.cyanNeon, 
+              fontSize: 12,
+              letterSpacing: 4,
+              fontWeight: FontWeight.bold,
             ),
-          )
-        )
-      ],
+          ),
+          const SizedBox(height: 16),
+
+          
+          SizedBox(
+            width: 200,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: const LinearProgressIndicator(
+                backgroundColor: Colors.white10,
+                color: AppTheme.cyanNeon, 
+                minHeight: 3,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

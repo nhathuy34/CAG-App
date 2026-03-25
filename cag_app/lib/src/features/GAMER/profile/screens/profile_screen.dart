@@ -7,16 +7,20 @@ import 'package:CAG_App/src/features/GAMER/profile/widgets/lootbox_tab.dart';
 import 'package:CAG_App/src/features/GAMER/profile/widgets/overview_tab.dart';
 import 'package:CAG_App/src/features/GAMER/profile/widgets/system_tab.dart';
 import 'package:CAG_App/src/features/GAMER/profile/widgets/wallet_tab.dart';
+import 'package:CAG_App/src/models/user_model.dart'; 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = ref.watch(profileTabIndexProvider);
-    final userProfileAsync = ref.watch(userProfileProvider); // Lấy tên thật từ provider
+    
+    // THEO ĐÚNG PROVIDER CỦA BẠN: Trả về AsyncValue<Usermodel>
+    final userProfileAsync = ref.watch(userProfileProvider);
 
     return Column(
       children: [
@@ -26,13 +30,33 @@ class ProfileScreen extends ConsumerWidget {
             padding: const EdgeInsets.only(left: 20, right: 20, top: 60),
             child: Column(
               children: [
+                // Truyền cục AsyncValue này vào header để nó tự xử lý Loading/Data
                 _avataHeader(context, userProfileAsync),
                 const SizedBox(height: 24),
+
+                // --- NÚT SCAN QR MÀU VÀNG ---
+                // --- NÚT SCAN QR CHUẨN THEO HÌNH ---
+                CagPrimaryButton(
+                  text: "SCAN QR",
+                  prefixIcon: Icons.qr_code_scanner, 
+                  onPressed: () {
+                    // Chuyển Tab chính sang trang Scan
+                    ref.read(navIndexProvider.notifier).state = 2;
+                  },
+                  backgroundColor: Colors.transparent, // Ép nền trong suốt
+                  textColor: AppTheme.gold,            // Chữ và Icon màu vàng
+                  isBorder: true,                      // Bật chế độ chỉ hiện viền
+                  boderColor: AppTheme.gold,           // Viền màu vàng
+                  height: 50,
+                  borderRadius: 5,
+                ),
+                
+                const SizedBox(height: 16),
+
+                // --- NÚT FIND MATCH ---
                 CagPrimaryButton(
                   text: "FIND MATCH",
-                  onPressed: () {
-                    ref.read(navIndexProvider.notifier).state = 3;
-                  },
+                  onPressed: () {},
                   backgroundColor: Colors.transparent,
                   textColor: AppTheme.cyanNeon,
                   isBorder: true,
@@ -63,29 +87,34 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _avataHeader(BuildContext context, AsyncValue userProfileAsync) {
+  // --- WIDGET HEADER ---
+  Widget _avataHeader(BuildContext context, AsyncValue<Usermodel> userProfileAsync) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _buildAvatarStack(userProfileAsync),
         const SizedBox(width: 32),
         Expanded(
+          // Dùng .when để bóc tách dữ liệu ra hiển thị tên
           child: userProfileAsync.when(
             data: (user) => _buildUserInfo(user.fullName),
             loading: () => const CircularProgressIndicator(color: AppTheme.cyanNeon),
-            error: (_, __) => _buildUserInfo("Lương Quang Vinh"),
+            error: (err, stack) => _buildUserInfo("Lỗi tải dữ liệu"),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildAvatarStack(AsyncValue userProfileAsync) {
+  // --- WIDGET AVATAR ---
+  Widget _buildAvatarStack(AsyncValue<Usermodel> userProfileAsync) {
+    // Dùng .when để bóc tách đường dẫn avatar
     final String avatarUrl = userProfileAsync.when(
       data: (user) => user.avatarUrl ?? 'https://picsum.photos/200',
       loading: () => 'https://picsum.photos/200',
-      error: (_, __) => 'https://picsum.photos/200',
+      error: (err, stack) => 'https://picsum.photos/200',
     );
+
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.bottomRight,
@@ -96,14 +125,14 @@ class ProfileScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: AppTheme.statsBlue, width: 2),
+            border: Border.all(color: AppTheme.cyanNeon, width: 2), 
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(6),
             child: Image.network(
               avatarUrl,
               fit: BoxFit.cover,
-              key: ValueKey(avatarUrl), // Key này cực quan trọng để update ảnh
+              key: ValueKey(avatarUrl),
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) return child;
                 return const Center(
@@ -111,26 +140,36 @@ class ProfileScreen extends ConsumerWidget {
                 );
               },
               errorBuilder: (context, error, stackTrace) => 
-                const Center(child: Icon(Icons.person, size: 40, color: Colors.white54)),
+                Container(
+                  color: Colors.white12,
+                  child: const Center(child: Icon(Icons.person, size: 40, color: Colors.white54)),
+                ),
             ),
           ),
         ),
         Positioned(
           bottom: -6, right: -10,
-          child: _buildBadge('LVL.8', color: AppTheme.statsBlue, isLevel: true),
+          child: _buildBadge('LVL.8', color: AppTheme.cyanNeon, isLevel: true),
         ),
       ],
     );
   }
 
+  // --- WIDGET THÔNG TIN USER ---
   Widget _buildUserInfo(String fullName) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           fullName,
-          style: GoogleFonts.rajdhani(color: AppTheme.textWhite, fontSize: 26, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic),
-          maxLines: 1, overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.rajdhani(
+            color: AppTheme.textWhite, 
+            fontSize: 26, 
+            fontWeight: FontWeight.w700, 
+            fontStyle: FontStyle.italic
+          ),
+          maxLines: 1, 
+          overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: 4),
         Text('ID: #LUONGVINH3969', style: GoogleFonts.rajdhani(color: AppTheme.textDim, fontSize: 14)),
@@ -150,6 +189,7 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
+  // --- WIDGET BADGE CHUNG ---
   Widget _buildBadge(String label, {Color color = Colors.white70, bool isLevel = false}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

@@ -30,30 +30,33 @@ class WalletTab extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Giữ lại Main Balance của bạn
               _buildMainBalance(stats.balance),
 
               const SizedBox(height: 30),
+              
+              // --- HEADER LINKED MEMBERSHIPS ---
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'LINKED MEMBERSHIP',
+                    'LINKED MEMBERSHIPS',
                     style: GoogleFonts.rajdhani(
-                      color: AppTheme.textWhite,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      color: AppTheme.textDim, // Màu xám nhạt như ảnh
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.5,
                     ),
                   ),
-
                   SizedBox(
-                    width: 120,
+                    width: 100, // Thu nhỏ nút lại cho tinh tế
                     child: CagPrimaryButton(
                       text: '+ ADD CARD',
-                      onPressed: () => {},
+                      onPressed: () {},
                       isBorder: true,
-                      boderColor: AppTheme.cyanNeon,
+                      boderColor: AppTheme.cyanNeon.withOpacity(0.5),
                       textColor: AppTheme.cyanNeon,
-                      height: 35,
+                      height: 32,
                       fontSize: 12,
                       borderRadius: 4,
                     ),
@@ -61,7 +64,9 @@ class WalletTab extends ConsumerWidget {
                 ],
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
+              
+              // --- LIST CARDS ---
               ...stats.linkedCards.map((card) => _buildMembershipCard(card)),
             ],
           ),
@@ -90,7 +95,6 @@ class WalletTab extends ConsumerWidget {
               letterSpacing: 1.5,
             ),
           ),
-
           const SizedBox(height: 8),
           Text(
             '$balance VND',
@@ -100,7 +104,6 @@ class WalletTab extends ConsumerWidget {
               fontWeight: FontWeight.w900,
             ),
           ),
-
           const SizedBox(height: 20),
           CagPrimaryButton(
             text: "TOP UP",
@@ -116,62 +119,159 @@ class WalletTab extends ConsumerWidget {
     );
   }
 
+  // --- HÀM BUILD CARD CHUẨN THEO HÌNH ---
   Widget _buildMembershipCard(MembershipCard card) {
+    // Tự động fake màu và hạng thành viên dựa theo tên quán (vì model của bạn có thể chưa có)
+    Color leftStripColor = Colors.grey;
+    String tierText = 'SILVER MEMBER';
+
+    if (card.title.toUpperCase().contains('FLASH')) {
+      leftStripColor = const Color(0xFFECA311); // Vàng Cam
+      tierText = 'DIAMOND MEMBER';
+    } else if (card.title.toUpperCase().contains('PRO')) {
+      leftStripColor = const Color(0xFFE53935); // Đỏ
+      tierText = 'GOLD MEMBER';
+    } else {
+      leftStripColor = const Color(0xFF546E7A); // Xám xanh
+      tierText = 'SILVER MEMBER';
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.cardBlue,
+        color: AppTheme.cardBlue, // Nền xanh đen
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.borderWhite),
+        // Viền tổng thể mờ mờ
+        border: Border.all(color: Colors.white.withOpacity(0.05)),
       ),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              card.imagePath,
-              width: 60,
-              height: 60,
-              fit: BoxFit.cover,
-            ),
-          ),
+      clipBehavior: Clip.antiAlias, // Cắt góc để thanh màu bên trái bo tròn theo
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Thanh màu bên trái
+            Container(width: 5, color: leftStripColor),
+            
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    // Hình ảnh
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: Colors.white10),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(6),
+                        child: Image.network(
+                          card.imagePath,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => 
+                              const Icon(Icons.image, color: Colors.white38),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    
+                    // Thông tin Tên & Mã thẻ
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  card.title,
+                                  style: GoogleFonts.rajdhani(
+                                    color: AppTheme.textWhite,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              // Chấm xanh lá cây (Online/Active)
+                              Container(
+                                width: 6, height: 6,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF00E676),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          // Chữ số thẻ dùng font Mono để cách đều nhau
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              card.number,
+                              style: GoogleFonts.ibmPlexMono(
+                                color: Colors.white54,
+                                fontSize: 11,
+                                letterSpacing: 1.5, // Giảm nhẹ khoảng cách chữ xuống một xíu cho an toàn
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    
+                    const SizedBox(width: 8),
 
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  card.title,
-                  style: GoogleFonts.rajdhani(
-                    color: AppTheme.textWhite,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w900,
-                  ),
+                    // Giá tiền & Hạng thành viên
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: card.price,
+                                style: GoogleFonts.rajdhani(
+                                  color: AppTheme.textWhite,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                              TextSpan(
+                                text: ' VND',
+                                style: GoogleFonts.rajdhani(
+                                  color: Colors.white54,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          tierText,
+                          style: GoogleFonts.ibmPlexMono(
+                            color: Colors.white38,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-
-                const SizedBox(height: 4),
-                Text(
-                  card.number,
-                  style: GoogleFonts.ibmPlexMono(
-                    color: AppTheme.textDim,
-                    fontSize: 11,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-
-          Text(
-            '${card.price} VND',
-            style: GoogleFonts.rajdhani(
-              color: AppTheme.textWhite,
-              fontSize: 18,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
