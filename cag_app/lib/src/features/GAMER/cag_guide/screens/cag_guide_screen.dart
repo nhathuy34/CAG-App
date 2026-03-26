@@ -4,7 +4,7 @@ import 'package:CAG_App/src/models/cafe.dart';
 import '../widgets/cafe_banner_header.dart';
 import '../widgets/cafe_mini_card.dart';
 import '../providers/cag_guide_provider.dart';
-import '../../zone/screens/zone_screen.dart';
+import '../zone/screens/zone_screen.dart';
 
 class CagGuideScreen extends ConsumerWidget {
   const CagGuideScreen({super.key});

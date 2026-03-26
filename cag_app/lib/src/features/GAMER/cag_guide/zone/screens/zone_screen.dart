@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../common_widgets/hexagon_bottom_nav.dart';
-import '../../home/providers/nav_provider.dart';
-import '../../scan/screens/scan_screen.dart';
+import '../../../../../common_widgets/hexagon_bottom_nav.dart';
+import '../../../home/providers/nav_provider.dart';
+import '../../../scan/screens/scan_screen.dart';
 import '../providers/zone_provider.dart';
 import '../widgets/zone_card.dart';
 import '../widgets/utility_card.dart';

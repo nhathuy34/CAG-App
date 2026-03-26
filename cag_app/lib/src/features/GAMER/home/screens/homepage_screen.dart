@@ -1,3 +1,4 @@
+import 'package:CAG_App/src/features/GAMER/community/screens/community_screen.dart';
 import 'package:CAG_App/src/features/GAMER/profile/screens/profile_screen.dart';
 import 'package:CAG_App/src/features/GAMER/cag_guide/screens/cag_guide_screen.dart';
 import 'package:CAG_App/src/features/GAMER/scan/screens/scan_screen.dart';
@@ -22,7 +23,7 @@ class HomePageScreen extends ConsumerWidget {
           IndexedStack(
             index: navIndex,
             children: const [
-              Center(child: Text("Cộng đồng", style: TextStyle(color: Colors.white))),
+              CommunityScreen(),
               Center(child: Text("Cloud Save", style: TextStyle(color: Colors.white))),
               ScanScreen(), 
               CagGuideScreen(),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:CAG_App/src/models/cafe.dart';
-import '../../zone/screens/zone_screen.dart';
-import '../../map/screens/map_screen.dart'; 
+import '../zone/screens/zone_screen.dart';
+import '../map/screens/map_screen.dart'; 
 
 class CafeBannerHeader extends StatefulWidget {
   final Cafe cafe;
