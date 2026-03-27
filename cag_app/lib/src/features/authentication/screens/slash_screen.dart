@@ -12,19 +12,30 @@ class SlashScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(authCheckerProvider, (previous, next) {
-      next.whenData((role) {
-        if (role != null) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => const HomePageScreen()),
-          );
-        } else {
+      next.when(
+        data: (role) {
+          if (role != null) {
+            Navigator.pushReplacement(
+              context,
+              Navigator.of(context).widget is HomePageScreen 
+                  ? MaterialPageRoute(builder: (_) => const HomePageScreen())
+                  : MaterialPageRoute(builder: (_) => const HomePageScreen()),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+            );
+          }
+        },
+        error: (err, stack) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const WelcomeScreen()),
           );
-        }
-      });
+        },
+        loading: () {},
+      );
     });
 
     final authState = ref.watch(authCheckerProvider);

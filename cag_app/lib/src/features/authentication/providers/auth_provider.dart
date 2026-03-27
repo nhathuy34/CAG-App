@@ -26,11 +26,19 @@ final selectedDistrictProvider = StateProvider<String>((ref) {
 
 // FutureProvider để kiểm tra token và lấy role khi app khởi động
 final authCheckerProvider = FutureProvider<String?>((ref) async {
-  await Future.delayed(const Duration(seconds: 2)); // Delay để hiện slash screen
+  ref.keepAlive(); // Giữ provider này sống để tránh bị reload bất ngờ
+  
+  try {
+    await Future.delayed(const Duration(seconds: 3)); // Tăng thời gian delay một chút
 
-  final bool loggedIn = await StorageHelper.isLoggedIn();
-  if(loggedIn) {
-    return await StorageHelper.getRole();
+    final bool loggedIn = await StorageHelper.isLoggedIn();
+    if (loggedIn) {
+      final role = await StorageHelper.getRole();
+      return role;
+    }
+  } catch (e) {
+    // Nếu có lỗi khi đọc storage, trả về null để về màn Welcome
+    return null;
   }
-  return null; // không tìm thất token
+  return null;
 });

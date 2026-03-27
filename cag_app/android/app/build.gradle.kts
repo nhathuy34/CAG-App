@@ -7,7 +7,7 @@ plugins {
 
 // Cách đọc file .env chuẩn chỉnh cho Kotlin Script
 val env = Properties()
-val envFile = rootProject.file("../.env") 
+val envFile = rootProject.file("../assets/.env") 
 
 if (envFile.exists()) {
     envFile.inputStream().use { stream ->
@@ -33,7 +33,7 @@ android {
 
     defaultConfig {
         // Lấy key từ file .env, nếu không thấy thì để trống
-        val apiKey = env.getProperty("GOOGLE_MAPS_API_KEY") ?: ""
+        val apiKey = env.getProperty("API_KEY") ?: ""
         manifestPlaceholders["mapsApiKey"] = apiKey
 
         applicationId = "com.example.cag_app"

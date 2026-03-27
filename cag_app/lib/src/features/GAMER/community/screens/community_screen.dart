@@ -1,7 +1,10 @@
-import 'package:CAG_App/src/common_widgets/cag_primary_button.dart';
 import 'package:CAG_App/src/constants/app_theme.dart';
 import 'package:CAG_App/src/features/GAMER/community/providers/community_provider.dart';
 import 'package:CAG_App/src/features/GAMER/community/screens/dashcommunity_widget.dart';
+import 'package:CAG_App/src/features/GAMER/community/screens/feed_tab_view.dart';
+import 'package:CAG_App/src/features/GAMER/community/screens/following_tab_view.dart';
+import 'package:CAG_App/src/features/GAMER/community/screens/roundtable_tab_view.dart';
+import 'package:CAG_App/src/features/GAMER/community/screens/find_teammates_tab_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -44,105 +47,99 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen>
           slivers: [
             SliverToBoxAdapter(
               child: Container(
+                margin: const EdgeInsets.all(16),
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [Color(0xFF4C1D95), Color(0xFF312E81)],
+                    begin: Alignment.bottomLeft,
+                    end: Alignment.topRight,
+                    colors: [Color(0xFF2E1065), Color(0xFF1E1B4B)],
                   ),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: const Color(0xFF7E22CE).withOpacity(0.5),
+                    color: const Color(0xFF8B5CF6).withOpacity(0.3),
                     width: 1,
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF8B5CF6).withOpacity(0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
                 ),
-                child: Column(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    animationPulse("REVIEW TO EARN"),
-                    Wrap(
-                      children: [
-                        Text(
-                          'BẠN CHƠI - BẠN REVIEW - ',
-                          style: TextStyle(
-                            fontSize: 28,
-                            color: AppTheme.textWhite,
-                            fontWeight: FontWeight.w900,
-                            fontStyle: FontStyle.italic,
-                            letterSpacing: -1,
-                          ),
-                        ),
-                        Text(
-                          'BẠN CÓ TIỀN',
-                          style: TextStyle(
-                            fontSize: 28,
-                            color: AppTheme.cyanNeon,
-                            fontWeight: FontWeight.w900,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Text.rich(
-                      TextSpan(
-                        style: TextStyle(
-                          color: AppTheme.textDim,
-                          fontSize: 14,
-                          height: 1.5,
-                        ),
+                    Expanded(
+                      flex: 7,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const TextSpan(
-                            text: 'Quy trình kiếm tiền:\n',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const TextSpan(
-                            text:
-                                '1. Chơi game → 2. Review → 3. Kéo khách → 4. ',
-                          ),
-                          TextSpan(
-                            text: 'Nhận hoa hồng trọn đời.',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                          animationPulse("REVIEW TO EARN"),
+                          const SizedBox(height: 8),
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: 'BẠN CHƠI - BẠN REVIEW\n',
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    color: AppTheme.textWhite,
+                                    fontWeight: FontWeight.w900,
+                                    fontStyle: FontStyle.italic,
+                                    letterSpacing: -0.5,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: 'BẠN CÓ TIỀN',
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    color: AppTheme.cyanNeon,
+                                    fontWeight: FontWeight.w900,
+                                    fontStyle: FontStyle.italic,
+                                    shadows: [
+                                      Shadow(color: AppTheme.cyanNeon.withOpacity(0.5), blurRadius: 10),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text.rich(
+                            TextSpan(
+                              style: TextStyle(
+                                color: AppTheme.textDim,
+                                fontSize: 13,
+                                height: 1.5,
+                              ),
+                              children: [
+                                const TextSpan(text: 'Quy trình kiếm tiền:\n'),
+                                const TextSpan(text: '1. Chơi game → 2. Viết Review\n3. Trở thành Đối Tác → 4. '),
+                                TextSpan(
+                                  text: 'Hoa hồng trọn đời.',
+                                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              _buildActionButton(Icons.edit, 'Viết Review', const Color(0xFF4F46E5)),
+                              const SizedBox(width: 8),
+                              _buildActionButton(Icons.account_balance_wallet, 'Ví Của Tôi', Colors.white10, isBorder: true),
+                            ],
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CagPrimaryButton(
-                            text: 'Viết Review Ngay',
-                            isGradient: true,
-                            textColor: Colors.white,
-                            prefixIcon: Icons.edit,
-                            borderRadius: 8,
-                            height: 50,
-                            onPressed: () {},
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: CagPrimaryButton(
-                            text: 'Ví Của Tôi',
-                            isBorder: true,
-                            backgroundColor: const Color(
-                              0xFF1E293B,
-                            ).withOpacity(0.8),
-                            boderColor: const Color(0xFF475569),
-                            textColor: Colors.white,
-                            borderRadius: 8,
-                            height: 50,
-                            onPressed: () {},
-                          ),
-                        ),
-                      ],
+                    const SizedBox(width: 12),
+                    Expanded(
+                      flex: 4,
+                      child: _buildEarningsCard(0),
                     ),
-                    Center(child: _buildEarningsCard(450000)),
                   ],
                 ),
               ),
@@ -153,30 +150,10 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen>
               child: IndexedStack(
                 index: selectIndex,
                 children: [
-                  const Center(
-                    child: Text(
-                      'Nội dung BẢNG TIN',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  const Center(
-                    child: Text(
-                      'Nội dung ĐANG THEO DÕI',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  const Center(
-                    child: Text(
-                      'Nội dung HỘI BÀN TRÒN',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  const Center(
-                    child: Text(
-                      'Nội dung TÌM ĐỒNG ĐỘI',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
+                   const FeedTabView(),
+                   const FollowingTabView(),
+                   const RoundtableTabView(),
+                   const FindTeammatesTabView(),
                 ],
               ),
             ),
@@ -216,74 +193,103 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen>
     );
   }
 
+  Widget _buildActionButton(IconData icon, String label, Color bgColor, {bool isBorder = false}) {
+    return Expanded(
+      child: Container(
+        height: 38,
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(8),
+          border: isBorder ? Border.all(color: Colors.white24) : null,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 14, color: Colors.white),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildEarningsCard(int earnings) {
     final String formattedEarnings = earnings.toString().replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
       (Match m) => '${m[1]}.',
     );
 
-    return Align(
-      alignment: Alignment.center,
-      child: Container(
-        margin: const EdgeInsets.only(top: 20),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color(0xFF020617).withOpacity(0.5),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withOpacity(0.1)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'THU NHẬP THÁNG NÀY',
-              style: TextStyle(
-                color: Color(0xFF94A3B8),
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.5,
-              ),
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Colors.white12),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'THU NHẬP\nTHÁNG NÀY',
+            style: TextStyle(
+              color: Color(0xFF94A3B8),
+              fontSize: 9,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+              height: 1.2,
             ),
-            const SizedBox(height: 6),
-            Text(
-              '$formattedEarnings ₫',
-              style: const TextStyle(
-                color: Color(0xFF4ADE80),
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'monospace',
-              ),
-            ),
-            const SizedBox(height: 10),
-            InkWell(
-              onTap: () {
-                // Xử lý rút tiền ở đây
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF22C55E).withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(
-                    color: const Color(0xFF22C55E).withOpacity(0.3),
-                  ),
-                ),
-                child: const Text(
-                  'Rút tiền ngay',
-                  style: TextStyle(
+          ),
+          const SizedBox(height: 12),
+          FittedBox(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(
+                  formattedEarnings,
+                  style: const TextStyle(
                     color: Color(0xFF4ADE80),
-                    fontSize: 10,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                const SizedBox(width: 4),
+                const Text(
+                  '₫',
+                  style: TextStyle(
+                    color: Color(0xFF2DD4BF),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            decoration: BoxDecoration(
+              color: const Color(0xFF134E4A),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            alignment: Alignment.center,
+            child: const Text(
+              'Rút tiền ngay',
+              style: TextStyle(
+                color: Color(0xFF2DD4BF),
+                fontSize: 9,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
