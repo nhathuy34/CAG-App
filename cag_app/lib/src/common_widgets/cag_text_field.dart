@@ -12,7 +12,7 @@ class CagTextField extends StatefulWidget {
   final int? maxLength;
   final double verticalPadding;
   
-  // 1. Khai báo thêm controller và validator
+  // Khai báo thêm controller và validator
   final TextEditingController? controller;
   final FormFieldValidator<String>? validator;
 
@@ -27,8 +27,8 @@ class CagTextField extends StatefulWidget {
     this.suffixIcon,
     this.maxLength,
     this.verticalPadding = 15.0,
-    this.controller, // 2. Đưa vào constructor
-    this.validator,  // 2. Đưa vào constructor
+    this.controller,
+    this.validator,
   });
 
   @override
@@ -60,12 +60,13 @@ class _CagTextFieldState extends State<CagTextField> {
       children: [
         if (widget.label != null)
           Text(widget.label!, style: const TextStyle(color: AppTheme.textDim, fontSize: 11, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
+        if (widget.label != null)
+          const SizedBox(height: 8),
 
-        // 3. Đổi TextField thành TextFormField để dùng được validator
+        // Đổi TextField thành TextFormField để dùng được validator
         TextFormField(
-          controller: widget.controller, // Truyền controller vào đây
-          validator: widget.validator,   // Truyền validator vào đây
+          controller: widget.controller,
+          validator: widget.validator,
           focusNode: _focusNode,
           obscureText: widget.isPassword,
           maxLength: widget.maxLength,
@@ -84,7 +85,7 @@ class _CagTextFieldState extends State<CagTextField> {
             filled: true,
             fillColor: Colors.black26,
 
-            // Cấu hình Border dựa trên tham số truyền vào
+            // Cấu hình Border bình thường
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius),
               borderSide: const BorderSide(color: AppTheme.borderWhite),
@@ -96,15 +97,19 @@ class _CagTextFieldState extends State<CagTextField> {
               borderSide: BorderSide(color: widget.activeColor, width: 1.5),
             ),
 
-            // 4. Thêm border màu đỏ khi validator trả về lỗi (tùy chọn nhưng rất khuyên dùng)
+            // Border báo lỗi (Màu Đỏ)
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius),
-              borderSide: const BorderSide(color: Colors.redAccent),
+              borderSide: const BorderSide(color: Colors.redAccent, width: 1.0),
             ),
+            
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius),
               borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
             ),
+            
+            // Chỉnh style cho dòng chữ báo lỗi
+            errorStyle: const TextStyle(color: Colors.redAccent, fontSize: 12),
           ),
         ),
       ],
