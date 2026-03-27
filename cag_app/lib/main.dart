@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: "assets/.env"); // Load file env lên
+  await dotenv.load(fileName: ".env"); // Load file env lên
   runApp(const ProviderScope(child: MyApp()));
 }
 

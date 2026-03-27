@@ -7,7 +7,7 @@ plugins {
 
 // Cách đọc file .env chuẩn chỉnh cho Kotlin Script
 val env = Properties()
-val envFile = rootProject.file("../assets/.env") 
+val envFile = rootProject.file("../.env")
 
 if (envFile.exists()) {
     envFile.inputStream().use { stream ->
