@@ -5,6 +5,11 @@ import 'package:CAG_App/src/features/GAMER/community/screens/dashcommunity_widge
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:CAG_App/src/features/GAMER/community/screens/feed_tab_view.dart';
+import 'package:CAG_App/src/features/GAMER/community/screens/following_tab_view.dart';
+import 'package:CAG_App/src/features/GAMER/community/screens/roundtable_tab_view.dart';
+import 'package:CAG_App/src/features/GAMER/community/screens/find_teammates_tab_view.dart';
+
 class CommunityScreen extends ConsumerStatefulWidget {
   const CommunityScreen({super.key});
 
@@ -152,31 +157,11 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen>
             SliverFillRemaining(
               child: IndexedStack(
                 index: selectIndex,
-                children: [
-                  const Center(
-                    child: Text(
-                      'Nội dung BẢNG TIN',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  const Center(
-                    child: Text(
-                      'Nội dung ĐANG THEO DÕI',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  const Center(
-                    child: Text(
-                      'Nội dung HỘI BÀN TRÒN',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  const Center(
-                    child: Text(
-                      'Nội dung TÌM ĐỒNG ĐỘI',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
+                children: const [
+                  FeedTabView(),
+                  FollowingTabView(),
+                  RoundtableTabView(),
+                  FindTeammatesTabView(),
                 ],
               ),
             ),
