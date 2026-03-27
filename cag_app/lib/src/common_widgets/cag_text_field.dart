@@ -11,6 +11,10 @@ class CagTextField extends StatefulWidget {
   final Widget? suffixIcon;     // Icon cuối ô
   final int? maxLength;
   final double verticalPadding;
+  
+  // 1. Khai báo thêm controller và validator
+  final TextEditingController? controller;
+  final FormFieldValidator<String>? validator;
 
   const CagTextField({
     super.key,
@@ -23,6 +27,8 @@ class CagTextField extends StatefulWidget {
     this.suffixIcon,
     this.maxLength,
     this.verticalPadding = 15.0,
+    this.controller, // 2. Đưa vào constructor
+    this.validator,  // 2. Đưa vào constructor
   });
 
   @override
@@ -56,7 +62,10 @@ class _CagTextFieldState extends State<CagTextField> {
           Text(widget.label!, style: const TextStyle(color: AppTheme.textDim, fontSize: 11, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
 
-        TextField(
+        // 3. Đổi TextField thành TextFormField để dùng được validator
+        TextFormField(
+          controller: widget.controller, // Truyền controller vào đây
+          validator: widget.validator,   // Truyền validator vào đây
           focusNode: _focusNode,
           obscureText: widget.isPassword,
           maxLength: widget.maxLength,
@@ -85,6 +94,16 @@ class _CagTextFieldState extends State<CagTextField> {
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius),
               borderSide: BorderSide(color: widget.activeColor, width: 1.5),
+            ),
+
+            // 4. Thêm border màu đỏ khi validator trả về lỗi (tùy chọn nhưng rất khuyên dùng)
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+              borderSide: const BorderSide(color: Colors.redAccent),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+              borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
             ),
           ),
         ),
