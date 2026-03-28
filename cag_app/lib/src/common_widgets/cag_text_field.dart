@@ -1,28 +1,32 @@
 import 'package:flutter/material.dart';
-import '../constants/app_theme.dart';
+import 'package:CAG_App/src/constants/app_theme.dart';
 
 class CagTextField extends StatefulWidget {
   final String? label;
   final String hint;
   final bool isPassword;
+  final TextEditingController? controller;
+  final TextInputType keyboardType;
+  final int? maxLines; // null = auto dãn, 1 = cố định 1 dòng
   final double borderRadius;
-  final Color activeColor;      // Màu border khi nhấn vào
-  final IconData? prefixIcon;   // Icon đầu ô
-  final Widget? suffixIcon;     // Icon cuối ô
-  final int? maxLength;
+  final Color activeColor;
+  final Widget? suffixIcon;
   final double verticalPadding;
+  final bool showBorder; // Thêm biến này để tùy chỉnh có hiện viền hay không
 
   const CagTextField({
     super.key,
-    required this.label,
+    this.label,
     required this.hint,
-    required this.activeColor,
     this.isPassword = false,
-    this.borderRadius = 10.0,
-    this.prefixIcon,
+    this.controller,
+    this.keyboardType = TextInputType.text,
+    this.maxLines = 1,
+    this.borderRadius = 12,
+    this.activeColor = AppTheme.primary,
     this.suffixIcon,
-    this.maxLength,
-    this.verticalPadding = 15.0,
+    this.verticalPadding = 14,
+    this.showBorder = true, // Mặc định là có viền cho Login/Register
   });
 
   @override
@@ -52,39 +56,44 @@ class _CagTextFieldState extends State<CagTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.label != null)
-          Text(widget.label!, style: const TextStyle(color: AppTheme.textDim, fontSize: 11, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-
-        TextField(
-          focusNode: _focusNode,
-          obscureText: widget.isPassword,
-          maxLength: widget.maxLength,
-          textAlignVertical: TextAlignVertical.center,
-          style: const TextStyle(color: AppTheme.textWhite,fontSize: 14),
-          decoration: InputDecoration(
-            hintText: widget.hint,
-            counterText: "",
-            isDense: true,
-            
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: widget.verticalPadding),
-
-            prefixIcon: widget.prefixIcon != null ? Icon(widget.prefixIcon, color: _isFocused ? widget.activeColor : Colors.white24, size: 20) : null,
-            suffixIcon: widget.suffixIcon,
-
-            filled: true,
-            fillColor: Colors.black26,
-
-            // Cấu hình Border dựa trên tham số truyền vào
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(widget.borderRadius),
-              borderSide: const BorderSide(color: AppTheme.borderWhite),
+        if (widget.label != null) ...[
+          Text(
+            widget.label!,
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+          ),
+          const SizedBox(height: 8),
+        ],
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            // Màu nền tối slate-900 như bản web
+            color: const Color(0xFF020617).withOpacity(0.5), 
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            border: Border.all(
+              color: _isFocused 
+                  ? widget.activeColor 
+                  : (widget.showBorder ? AppTheme.borderWhite : Colors.transparent),
+              width: 1,
             ),
-
-            // Border khi TextField được focus
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(widget.borderRadius),
-              borderSide: BorderSide(color: widget.activeColor, width: 1.5),
+          ),
+          child: TextField(
+            controller: widget.controller,
+            focusNode: _focusNode,
+            obscureText: widget.isPassword,
+            maxLines: widget.maxLines,
+            // Nếu maxLines là null thì dùng keyboard multiline
+            keyboardType: widget.maxLines == null ? TextInputType.multiline : widget.keyboardType,
+            style: const TextStyle(color: Colors.white, fontSize: 14),
+            decoration: InputDecoration(
+              hintText: widget.hint,
+              hintStyle: const TextStyle(color: AppTheme.textDim, fontSize: 14),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 16, 
+                vertical: widget.verticalPadding
+              ),
+              suffixIcon: widget.suffixIcon,
+              border: InputBorder.none, // Tắt border mặc định của TextField vì đã có Container bọc
+              isDense: true,
             ),
           ),
         ),

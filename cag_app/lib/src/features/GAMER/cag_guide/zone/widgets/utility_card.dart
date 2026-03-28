@@ -10,45 +10,47 @@ class UtilityCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF161B29), 
+        color: const Color(0xFF161B29),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.transparent, width: 1.5), 
+        border: Border.all(color: Colors.transparent, width: 1.5),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: const BoxDecoration(
-              color: Color(0xFF11141E), 
-              shape: BoxShape.circle
+              color: Color(0xFF11141E),
+              shape: BoxShape.circle,
             ),
-            child: Icon(
-              utility.icon, 
-              color: Colors.blueAccent, 
-              size: 24
+            child: Icon(utility.icon, color: Colors.blueAccent, size: 24),
+          ),
+          const SizedBox(height: 8),
+
+          Flexible(
+            child: Text(
+              utility.title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                fontSize: 13,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(height: 12),
-          
-          // Tiêu đề
-          Text(
-            utility.title, 
-            textAlign: TextAlign.center, 
-            style: const TextStyle(
-              color: Colors.white, // Chữ trắng hết
-              fontWeight: FontWeight.w900, 
-              fontSize: 13
-            )
-          ),
-          const SizedBox(height: 4),
-          
-          // Mô tả
-          Text(
-            utility.subtitle, 
-            textAlign: TextAlign.center, 
-            style: const TextStyle(color: Colors.grey, fontSize: 10), 
-            maxLines: 2
+
+          const SizedBox(height: 2),
+
+          Flexible(
+            child: Text(
+              utility.subtitle,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.grey, fontSize: 10),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),

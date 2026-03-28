@@ -98,11 +98,11 @@ class CommuTabBar extends ConsumerWidget {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16), // pb-4 px-6
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: isActive ? borderColor : Colors.transparent, // border-b-2
+              color: isActive ? borderColor : Colors.transparent,
               width: 2,
             ),
           ),

@@ -9,6 +9,8 @@ class Usermodel {
   final String commune;
   final String district;
   final String? avatarUrl;
+  final bool isVip;
+  final String? badge;
 
   Usermodel({
     required this.userType,
@@ -21,6 +23,8 @@ class Usermodel {
     required this.commune,
     required this.district,
     this.avatarUrl,
+    this.isVip = false,
+    this.badge,
   });
 
   factory Usermodel.fromJson(Map<String, dynamic> json) {
