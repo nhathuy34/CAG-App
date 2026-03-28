@@ -105,7 +105,11 @@ class QuestCard extends StatelessWidget {
 class PostItemWidget extends ConsumerStatefulWidget {
   final PostModel post;
   final void Function(Map<String, dynamic> booking)? onOpenBookingModal;
-  const PostItemWidget({super.key, required this.post, this.onOpenBookingModal});
+  const PostItemWidget({
+    super.key,
+    required this.post,
+    this.onOpenBookingModal,
+  });
 
   @override
   ConsumerState<PostItemWidget> createState() => _PostItemWidgetState();
@@ -137,19 +141,31 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               children: [
-                const Icon(Icons.location_on_outlined, color: AppTheme.textDim, size: 14),
+                const Icon(
+                  Icons.location_on_outlined,
+                  color: AppTheme.textDim,
+                  size: 14,
+                ),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
                     widget.post.location,
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF065F46),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                   onPressed: () {
                     final payload = {
@@ -162,15 +178,28 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
                       widget.onOpenBookingModal!(payload);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Booking modal not implemented')),
+                        const SnackBar(
+                          content: Text('Booking modal not implemented'),
+                        ),
                       );
                     }
                   },
                   child: Row(
                     children: const [
-                      Icon(Icons.person_add_outlined, color: Color(0xFF34D399), size: 14),
+                      Icon(
+                        Icons.person_add_outlined,
+                        color: Color(0xFF34D399),
+                        size: 14,
+                      ),
                       SizedBox(width: 6),
-                      Text('ĐẶT ĐÚNG MÁY NÀY (-10%)', style: TextStyle(color: Color(0xFF34D399), fontSize: 12, fontWeight: FontWeight.bold)),
+                      Text(
+                        'ĐẶT ĐÚNG MÁY NÀY (-10%)',
+                        style: TextStyle(
+                          color: Color(0xFF34D399),
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -215,36 +244,155 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
   }
 
   Widget _buildHeader() {
+    final author = widget.post.author;
+
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Row(
+        crossAxisAlignment:
+            CrossAxisAlignment.start, // Căn lề trên để tên và avatar chuẩn
         children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundImage: NetworkImage(widget.post.author.avatarUrl ?? ''),
+          // 1. Avatar với dấu tích xanh
+          Stack(
+            children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundImage: NetworkImage(author.avatarUrl ?? ''),
+              ),
+              if (author.isVerified)
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF0F172A),
+                      shape: BoxShape.circle,
+                    ),
+                    padding: const EdgeInsets.all(1),
+                    child: const Icon(
+                      Icons.check_circle,
+                      color: Color(0xFF06B6D4),
+                      size: 14,
+                    ),
+                  ),
+                ),
+            ],
           ),
           const SizedBox(width: 12),
+
+          // 2. Phần nội dung chính (Tên + Badges + Nút Follow + Time)
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  widget.post.author.fullName,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
+                // Dùng Wrap để Tên, Badges và Nút Follow tự động nối đuôi nhau
+                Wrap(
+                  crossAxisAlignment: WrapCrossAlignment
+                      .center, // Căn giữa theo chiều dọc các item
+                  spacing: 8, // Khoảng cách ngang giữa các phần tử
+                  runSpacing: 4, // Khoảng cách khi xuống dòng (nếu quá dài)
+                  children: [
+                    Text(
+                      author.fullName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+
+                    // Danh sách Badges
+                    if (widget.post.badges != null &&
+                        widget.post.badges!.isNotEmpty)
+                      ...widget.post.badges!
+                          .map((badgeName) => _buildBadgeWidget(badgeName))
+                          .toList(),
+
+                    // NÚT THEO DÕI: Bây giờ nó đứng chung hàng với Badges
+                    _buildFollowButton(author),
+                  ],
                 ),
+                const SizedBox(height: 2),
                 Text(
                   widget.post.timestamp,
-                  style: const TextStyle(color: AppTheme.textDim, fontSize: 11),
+                  style: const TextStyle(
+                    color: Color(0xFF94A3B8),
+                    fontSize: 11,
+                  ),
                 ),
               ],
             ),
           ),
-          const Icon(Icons.more_horiz, color: AppTheme.textDim),
+
+          // Nút 3 chấm nằm ngoài cùng bên phải
+          const Icon(Icons.more_vert, color: Color(0xFF94A3B8)),
         ],
+      ),
+    );
+  }
+
+  // Hàm phụ tách riêng nút Follow cho gọn code
+  Widget _buildFollowButton(author) {
+    bool isFollowing = author.isFollowing;
+
+    return InkWell(
+      onTap: () {
+        // Logic xử lý follow của bạn
+      },
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: const Color(0xFF0891B2),
+          ), // Màu xanh cyan cũ của bạn
+          color: isFollowing
+              ? const Color(0xFF0891B2).withOpacity(0.1)
+              : Colors.transparent,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (isFollowing)
+              const Icon(Icons.check, size: 12, color: Color(0xFF22D3EE)),
+            if (!isFollowing)
+              const Icon(Icons.add, size: 12, color: Color(0xFF22D3EE)),
+            const SizedBox(width: 4),
+            Text(
+              isFollowing ? 'ĐANG THEO DÕI' : 'THEO DÕI',
+              style: const TextStyle(
+                color: Color(0xFF22D3EE),
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Hàm phụ để vẽ các nhãn danh hiệu (Badges)
+  Widget _buildBadgeWidget(String label) {
+    bool isVip = label.toUpperCase() == 'VIP';
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: isVip ? const Color(0xFF42210B) : const Color(0xFF1E293B),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(
+          color: isVip ? const Color(0xFFEAB308) : const Color(0xFF475569),
+          width: 0.5,
+        ),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: isVip ? const Color(0xFFEAB308) : const Color(0xFF94A3B8),
+          fontSize: 10,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }

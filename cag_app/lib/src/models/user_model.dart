@@ -20,7 +20,9 @@ class Usermodel {
   final int rankProgress;
   final double balance;
   final int cagPoints;
-  final bool isVerified;
+  final bool isVerified; // Dấu tích xanh trong hình
+  final List<String> badges; // Ví dụ: ['CAG Creator', 'VIP']
+  final bool isFollowing; // Trạng thái của nút + THEO DÕI
 
   Usermodel({
     required this.userType,
@@ -41,6 +43,8 @@ class Usermodel {
     this.balance = 0.0,
     this.cagPoints = 0,
     this.isVerified = false,
+    this.badges = const [],
+    this.isFollowing = false,
   });
   Usermodel copyWith({
     int? userType,
@@ -81,6 +85,8 @@ class Usermodel {
       balance: balance ?? this.balance,
       cagPoints: cagPoints ?? this.cagPoints,
       isVerified: isVerified ?? this.isVerified,
+      badges: badges ?? this.badges,
+      isFollowing: isFollowing ?? this.isFollowing,
     );
   }
 
@@ -105,6 +111,7 @@ class Usermodel {
       balance: (json['balance'] as num? ?? 0).toDouble(),
       cagPoints: json['cagPoints'] as int? ?? 0,
       isVerified: json['isVerified'] as bool? ?? false,
+      
     );
   }
 
