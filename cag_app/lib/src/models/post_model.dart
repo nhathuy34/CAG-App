@@ -1,4 +1,5 @@
 import 'package:CAG_App/src/models/user_model.dart';
+import 'enums.dart';
 
 class PostModel {
   final String id;
@@ -12,7 +13,12 @@ class PostModel {
   final String location;
   final bool isPinned;
   final bool isFeatured;
-  final List<String> badges; // ['CAG Creator', 'VIP']
+  final List<String> badges;
+
+  // Thêm từ TS
+  final PostType? type;
+  final double trustScore;
+  final PostStatus status;
 
   PostModel({
     required this.id,
@@ -27,6 +33,9 @@ class PostModel {
     this.isPinned = false,
     this.isFeatured = false,
     this.badges = const [],
+    this.type,
+    this.trustScore = 0.0,
+    this.status = PostStatus.ACTIVE,
   });
 }
 

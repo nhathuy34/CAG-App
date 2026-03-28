@@ -8,10 +8,19 @@ class ZoneModel {
   final String vga;
   final String monitor;
   final String gear;
+  
+  // Field bổ sung để đồng bộ TS
+  final List<String> perks;
 
   ZoneModel({
-    required this.title, required this.priceGuest, required this.priceMember,
-    required this.cpu, required this.vga, required this.monitor, required this.gear,
+    required this.title, 
+    required this.priceGuest, 
+    required this.priceMember,
+    required this.cpu, 
+    required this.vga, 
+    required this.monitor, 
+    required this.gear,
+    this.perks = const [],
   });
 }
 
