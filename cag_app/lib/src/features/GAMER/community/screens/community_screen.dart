@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:CAG_App/src/features/GAMER/community/widgets/feed_tab/feed_tab_view.dart';
-import 'package:CAG_App/src/features/GAMER/community/widgets/following_tab_view.dart';
-import 'package:CAG_App/src/features/GAMER/community/widgets/roundtable_tab_view.dart';
-import 'package:CAG_App/src/features/GAMER/community/widgets/find_teammates_tab_view.dart';
+import 'package:CAG_App/src/features/GAMER/community/widgets/following_tab/following_tab_view.dart';
+import 'package:CAG_App/src/features/GAMER/community/widgets/round_table_tab/roundtable_tab_view.dart';
+import 'package:CAG_App/src/features/GAMER/community/widgets/find_teamate_tab/find_teammates_tab_view.dart';
 
 class CommunityScreen extends ConsumerStatefulWidget {
   const CommunityScreen({super.key});
