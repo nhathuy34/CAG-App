@@ -134,9 +134,6 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
           // 1. Header & Content
           _buildHeader(),
           _buildContent(),
-
-          // 2. Footer (Nút tương tác)
-          // Location + Booking row
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
@@ -236,7 +233,6 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
             ),
           ),
 
-          // 3. Phần Bình luận
           PostCommentSection(isOpen: _showComments),
         ],
       ),
@@ -252,7 +248,6 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
         crossAxisAlignment:
             CrossAxisAlignment.start, // Căn lề trên để tên và avatar chuẩn
         children: [
-          // 1. Avatar với dấu tích xanh
           Stack(
             children: [
               CircleAvatar(
@@ -279,13 +274,10 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
             ],
           ),
           const SizedBox(width: 12),
-
-          // 2. Phần nội dung chính (Tên + Badges + Nút Follow + Time)
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Dùng Wrap để Tên, Badges và Nút Follow tự động nối đuôi nhau
                 Wrap(
                   crossAxisAlignment: WrapCrossAlignment
                       .center, // Căn giữa theo chiều dọc các item
@@ -300,15 +292,11 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
                         fontSize: 15,
                       ),
                     ),
-
-                    // Danh sách Badges
                     if (widget.post.badges != null &&
                         widget.post.badges!.isNotEmpty)
                       ...widget.post.badges!
                           .map((badgeName) => _buildBadgeWidget(badgeName))
                           .toList(),
-
-                    // NÚT THEO DÕI: Bây giờ nó đứng chung hàng với Badges
                     _buildFollowButton(author),
                   ],
                 ),
@@ -323,21 +311,16 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
               ],
             ),
           ),
-
-          // Nút 3 chấm nằm ngoài cùng bên phải
           const Icon(Icons.more_vert, color: Color(0xFF94A3B8)),
         ],
       ),
     );
   }
-
-  // Hàm phụ tách riêng nút Follow cho gọn code
   Widget _buildFollowButton(author) {
     bool isFollowing = author.isFollowing;
 
     return InkWell(
       onTap: () {
-        // Logic xử lý follow của bạn
       },
       borderRadius: BorderRadius.circular(20),
       child: Container(
@@ -346,7 +329,7 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: const Color(0xFF0891B2),
-          ), // Màu xanh cyan cũ của bạn
+          ),
           color: isFollowing
               ? const Color(0xFF0891B2).withOpacity(0.1)
               : Colors.transparent,
@@ -372,8 +355,6 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
       ),
     );
   }
-
-  // Hàm phụ để vẽ các nhãn danh hiệu (Badges)
   Widget _buildBadgeWidget(String label) {
     bool isVip = label.toUpperCase() == 'VIP';
     return Container(
@@ -451,7 +432,6 @@ class _PostItemWidgetState extends ConsumerState<PostItemWidget> {
     );
   }
 }
-
 class PostInputWidget extends StatelessWidget {
   final String? avatarUrl;
   const PostInputWidget({super.key, this.avatarUrl});
@@ -468,7 +448,6 @@ class PostInputWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Avatar với viền nhẹ
           Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -488,8 +467,8 @@ class PostInputWidget extends StatelessWidget {
             child: CagTextField(
               hint: 'Bạn vừa chơi ở đâu? Review ngay kiếm tiền...',
               borderRadius: 30,
-              maxLines: null, // Tự dãn dòng
-              showBorder: false, // Tắt viền lúc bình thường cho giống Web
+              maxLines: null,
+              showBorder: false,
               verticalPadding: 10,
               suffixIcon: const Icon(
                 Icons.edit_outlined,
