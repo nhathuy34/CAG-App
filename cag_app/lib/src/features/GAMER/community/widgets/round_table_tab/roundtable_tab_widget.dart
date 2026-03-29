@@ -1,35 +1,10 @@
 import 'package:flutter/material.dart';
 
-class RoundtableTabView extends StatelessWidget {
-  const RoundtableTabView({super.key});
+class DiscussionInputWidget extends StatelessWidget {
+  const DiscussionInputWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildDiscussionInput(),
-          const SizedBox(height: 20),
-          _buildCategoryFilters(),
-          const SizedBox(height: 20),
-          _buildDiscussionThread(
-            userName: 'Gamer Ẩn Danh',
-            timestamp: '5 giờ trước',
-            isFollowing: false,
-            upvotes: 3,
-            title: 'LỖI SAVE GAME WUKONG KHÔNG LOAD ĐƯỢC Ở CHAPTER 4, AI BIẾT FIX KHÔNG CỨU VỚI :((',
-            hashtags: ['#LoiGame', '#Help'],
-            comments: 10,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDiscussionInput() {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -56,8 +31,13 @@ class RoundtableTabView extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildCategoryFilters() {
+class CategoryFiltersWidget extends StatelessWidget {
+  const CategoryFiltersWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       physics: const BouncingScrollPhysics(),
@@ -95,16 +75,30 @@ class RoundtableTabView extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildDiscussionThread({
-    required String userName,
-    required String timestamp,
-    required bool isFollowing,
-    required int upvotes,
-    required String title,
-    required List<String> hashtags,
-    required int comments,
-  }) {
+class DiscussionThreadWidget extends StatelessWidget {
+  const DiscussionThreadWidget({
+    super.key,
+    required this.userName,
+    required this.timestamp,
+    required this.isFollowing,
+    required this.upvotes,
+    required this.title,
+    required this.hashtags,
+    required this.comments,
+  });
+
+  final String userName;
+  final String timestamp;
+  final bool isFollowing;
+  final int upvotes;
+  final String title;
+  final List<String> hashtags;
+  final int comments;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(

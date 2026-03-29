@@ -1,51 +1,10 @@
 import 'package:flutter/material.dart';
 
-class FindTeammatesTabView extends StatelessWidget {
-  const FindTeammatesTabView({super.key});
+class CreateRoomBannerWidget extends StatelessWidget {
+  const CreateRoomBannerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildCreateRoomBanner(),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: _buildTeamCard(
-                  gameName: 'CS:GO 2',
-                  title: 'CẦN TÌM 2 BẠN BẮN CS:GO RANK GOLD',
-                  hostName: 'Tuấn Đạt',
-                  location: 'Khu vực Gò Vấp',
-                  time: '20:00 Tối nay',
-                  slots: '3/5',
-                  progress: 0.6,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildTeamCard(
-                  gameName: 'VALORANT',
-                  title: 'TÌM TEAM FULL NỮ BẮN CHILL',
-                  hostName: 'Lan Anh',
-                  location: 'Online / Q.1',
-                  time: 'Ngay bây giờ',
-                  slots: '1/5',
-                  progress: 0.2,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCreateRoomBanner() {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -100,18 +59,32 @@ class FindTeammatesTabView extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildTeamCard({
-    required String gameName,
-    required String title,
-    required String hostName,
-    required String location,
-    required String time,
-    required String slots,
-    required double progress,
-  }) {
+class TeamCardWidget extends StatelessWidget {
+  const TeamCardWidget({
+    super.key,
+    required this.gameName,
+    required this.title,
+    required this.hostName,
+    required this.location,
+    required this.time,
+    required this.slots,
+    required this.progress,
+  });
+
+  final String gameName;
+  final String title;
+  final String hostName;
+  final String location;
+  final String time;
+  final String slots;
+  final double progress;
+
+  @override
+  Widget build(BuildContext context) {
     Color gameColor = gameName == 'CS:GO 2' ? const Color(0xFFCA8A04) : const Color(0xFFEF4444);
-    
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

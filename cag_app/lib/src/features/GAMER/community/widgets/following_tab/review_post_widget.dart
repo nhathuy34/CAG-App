@@ -1,55 +1,39 @@
 import 'package:flutter/material.dart';
 
-class FollowingTabView extends StatelessWidget {
-  const FollowingTabView({super.key});
+class ReviewPostWidget extends StatelessWidget {
+  const ReviewPostWidget({
+    super.key,
+    required this.userName,
+    required this.userRole,
+    required this.isVip,
+    required this.isFollowing,
+    required this.timestamp,
+    required this.rating,
+    required this.ratings,
+    required this.content,
+    required this.hashtags,
+    required this.likes,
+    required this.comments,
+    required this.location,
+    required this.imageUrl,
+  });
+
+  final String userName;
+  final String userRole;
+  final bool isVip;
+  final bool isFollowing;
+  final String timestamp;
+  final double rating;
+  final Map<String, int> ratings;
+  final String content;
+  final List<String> hashtags;
+  final int likes;
+  final int comments;
+  final String location;
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      child: Column(
-        children: [
-          _buildReviewPost(
-            userName: 'Thành Long',
-            userRole: 'CAG Creator',
-            isVip: true,
-            isFollowing: true,
-            timestamp: '15 phút trước',
-            rating: 4.5,
-            ratings: {
-              'Cấu hình': 5,
-              'Không gian': 4,
-              'Phục vụ': 5,
-              'Giá': 3,
-            },
-            content: 'Review nhẹ Flash Gaming Center: Máy mượt, ghế êm, máy lạnh run người. Ae ghé test ngay dàn RTX 4090 nhé! ❄️',
-            hashtags: ['#ReviewQuan', '#KiemTienOnline', '#NetCo'],
-            likes: 154,
-            comments: 2,
-            location: 'Flash Gaming Center',
-            imageUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f',
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildReviewPost({
-    required String userName,
-    required String userRole,
-    required bool isVip,
-    required bool isFollowing,
-    required String timestamp,
-    required double rating,
-    required Map<String, int> ratings,
-    required String content,
-    required List<String> hashtags,
-    required int likes,
-    required int comments,
-    required String location,
-    required String imageUrl,
-  }) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
