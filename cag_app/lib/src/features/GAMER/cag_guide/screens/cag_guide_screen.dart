@@ -29,7 +29,8 @@ class CagGuideScreen extends ConsumerWidget {
               match: '98%',
               pc: '120',
               ram: '24GB',
-              image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800',
+              image:
+                  'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800',
               year: '2024',
             ),
           ),
@@ -69,8 +70,12 @@ class CagGuideScreen extends ConsumerWidget {
   Widget _buildTopTrendingSection(WidgetRef ref) {
     final cafesAsync = ref.watch(topTrendingCafesProvider);
     return cafesAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFF00F2EA))),
-      error: (err, _) => Center(child: Text('Error: $err', style: const TextStyle(color: Colors.red))),
+      loading: () => const Center(
+        child: CircularProgressIndicator(color: Color(0xFF00F2EA)),
+      ),
+      error: (err, _) => Center(
+        child: Text('Error: $err', style: const TextStyle(color: Colors.red)),
+      ),
       data: (cafes) => _buildHorizontalCafeList(cafes),
     );
   }
@@ -78,8 +83,12 @@ class CagGuideScreen extends ConsumerWidget {
   Widget _buildRtx40Section(WidgetRef ref) {
     final cafesAsync = ref.watch(rtx40CafesProvider);
     return cafesAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFF00F2EA))),
-      error: (err, _) => Center(child: Text('Error: $err', style: const TextStyle(color: Colors.red))),
+      loading: () => const Center(
+        child: CircularProgressIndicator(color: Color(0xFF00F2EA)),
+      ),
+      error: (err, _) => Center(
+        child: Text('Error: $err', style: const TextStyle(color: Colors.red)),
+      ),
       data: (cafes) => _buildHorizontalCafeList(cafes),
     );
   }
@@ -87,8 +96,12 @@ class CagGuideScreen extends ConsumerWidget {
   Widget _buildCoupleZoneSection(WidgetRef ref) {
     final cafesAsync = ref.watch(coupleZoneCafesProvider);
     return cafesAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFF00F2EA))),
-      error: (err, _) => Center(child: Text('Error: $err', style: const TextStyle(color: Colors.red))),
+      loading: () => const Center(
+        child: CircularProgressIndicator(color: Color(0xFF00F2EA)),
+      ),
+      error: (err, _) => Center(
+        child: Text('Error: $err', style: const TextStyle(color: Colors.red)),
+      ),
       data: (cafes) => _buildHorizontalCafeList(cafes),
     );
   }
@@ -96,8 +109,12 @@ class CagGuideScreen extends ConsumerWidget {
   Widget _buildDiamondSection(WidgetRef ref) {
     final cafesAsync = ref.watch(diamondCafesProvider);
     return cafesAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFF00F2EA))),
-      error: (err, _) => Center(child: Text('Error: $err', style: const TextStyle(color: Colors.red))),
+      loading: () => const Center(
+        child: CircularProgressIndicator(color: Color(0xFF00F2EA)),
+      ),
+      error: (err, _) => Center(
+        child: Text('Error: $err', style: const TextStyle(color: Colors.red)),
+      ),
       data: (cafes) => _buildDiamondList(cafes),
     );
   }
@@ -118,24 +135,27 @@ class CagGuideScreen extends ConsumerWidget {
     );
   }
 
-  // ── Danh sách cuộn ngang ──
   Widget _buildHorizontalCafeList(List<Cafe> cafes) {
     return SizedBox(
-      height: 170,
+      height: 250,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: cafes.length,
         itemBuilder: (context, index) {
-          final cafe = cafes[index];
-          return CafeMiniCard(
-            cafe: cafe,
-            onTap: () {
-              // ĐÃ MỞ KHÓA CHUYỂN TRANG
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const ZoneScreen()),
-              );
-            },
+          return Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: SizedBox(
+              width: 220,
+              child: CafeMiniCard(
+                cafe: cafes[index],
+                onTap: () {
+                  Navigator.of(
+                    context,
+                  ).push(MaterialPageRoute(builder: (_) => const ZoneScreen()));
+                },
+              ),
+            ),
           );
         },
       ),
