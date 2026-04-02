@@ -149,8 +149,8 @@ class GameCard extends StatelessWidget {
 
     // 2. NẾU LÀ CÁC TAB KHÁC -> HIỆN GIAO DIỆN LIST (Ảnh 15.16.14 hoặc 15.25.10)
     // Tự động fake thời gian hiển thị phía bên phải cho đẹp
-    String timeAgo = isTool ? "8 ngày 21 giờ trước" : "18 giờ 11 phút trước";
-
+    //String timeAgo = isTool ? "8 ngày 21 giờ trước" : "18 giờ 11 phút trước";
+    String timeAgo = _formatTimeAgo(game.progressValue);
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(20),
@@ -250,5 +250,20 @@ class GameCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _formatTimeAgo(String dateTimeString) {
+    try {
+      DateTime updateTime = DateTime.parse(dateTimeString);
+      DateTime now = DateTime.now();
+      Duration difference = now.difference(updateTime);
+
+      if (difference.inDays > 0) return "${difference.inDays} ngày trước";
+      if (difference.inHours > 0) return "${difference.inHours} giờ trước";
+      if (difference.inMinutes > 0) return "${difference.inMinutes} phút trước";
+      return "Vừa xong";
+    } catch (e) {
+      return "Không rõ";
+    }
   }
 }

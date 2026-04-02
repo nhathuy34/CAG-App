@@ -34,43 +34,43 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
   bool _isLoading = true;
   bool _showDiamondCard = false;
 
-  final List<GameModel> _toolsList = [
-    GameModel(
-      title: "DISCORD",
-      location: "TOOLS",
-      imageUrl: "",
-      progressValue: "2026-03-20 17:32:21",
-      rank: "TOOLS",
-    ),
-    GameModel(
-      title: "LGHUB",
-      location: "TOOLS",
-      imageUrl: "",
-      progressValue: "2026-02-25 14:03:13",
-      rank: "TOOLS",
-    ),
-    GameModel(
-      title: "VANGUARD ANTI CAG",
-      location: "TOOLS",
-      imageUrl: "",
-      progressValue: "2026-02-20 11:36:09",
-      rank: "TOOLS",
-    ),
-    GameModel(
-      title: "FIREFOX",
-      location: "TOOLS",
-      imageUrl: "",
-      progressValue: "2026-01-03 11:28:56",
-      rank: "TOOLS",
-    ),
-    GameModel(
-      title: "COCCOC",
-      location: "TOOLS",
-      imageUrl: "",
-      progressValue: "2026-01-03 11:28:56",
-      rank: "TOOLS",
-    ),
-  ];
+  // final List<GameModel> _toolsList = [
+  //   GameModel(
+  //     title: "DISCORD",
+  //     location: "TOOLS",
+  //     imageUrl: "",
+  //     progressValue: "2026-03-20 17:32:21",
+  //     rank: "TOOLS",
+  //   ),
+  //   GameModel(
+  //     title: "LGHUB",
+  //     location: "TOOLS",
+  //     imageUrl: "",
+  //     progressValue: "2026-02-25 14:03:13",
+  //     rank: "TOOLS",
+  //   ),
+  //   GameModel(
+  //     title: "VANGUARD ANTI CAG",
+  //     location: "TOOLS",
+  //     imageUrl: "",
+  //     progressValue: "2026-02-20 11:36:09",
+  //     rank: "TOOLS",
+  //   ),
+  //   GameModel(
+  //     title: "FIREFOX",
+  //     location: "TOOLS",
+  //     imageUrl: "",
+  //     progressValue: "2026-01-03 11:28:56",
+  //     rank: "TOOLS",
+  //   ),
+  //   GameModel(
+  //     title: "COCCOC",
+  //     location: "TOOLS",
+  //     imageUrl: "",
+  //     progressValue: "2026-01-03 11:28:56",
+  //     rank: "TOOLS",
+  //   ),
+  // ];
 
   @override
   void initState() {
@@ -126,7 +126,7 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
       } else if (tabLabel == "OFFLINE") {
         _filteredGames = _allGames.where((g) => g.rank == "OFFLINE").toList();
       } else if (tabLabel == "TOOLS") {
-        _filteredGames = _toolsList;
+        _filteredGames = _allGames.where((g) => g.rank == "TOOLS").toList();;
       } else if (tabLabel == "GAME CỦA TÔI") {
         _filteredGames = _allGames.take(4).toList();
       }
