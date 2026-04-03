@@ -20,22 +20,26 @@ class GameFilterButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           // Đổi màu nền: Xanh mờ khi bật, đen xám khi tắt
-          color: isFiltering 
-              ? const Color(0xFF00FF75).withOpacity(0.05) 
+          color: isFiltering
+              ? const Color(0xFF00FF75).withOpacity(0.05)
               : const Color(0xFF121212),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isFiltering ? const Color(0xFF00FF75) : Colors.white.withOpacity(0.05),
+            color: isFiltering
+                ? const Color(0xFF00FF75)
+                : Colors.white.withOpacity(0.05),
             width: isFiltering ? 1.5 : 1,
           ),
           // Hiệu ứng tỏa sáng Neon
-          boxShadow: isFiltering ? [
-            BoxShadow(
-              color: const Color(0xFF00FF75).withOpacity(0.2),
-              blurRadius: 12,
-              spreadRadius: 1,
-            )
-          ] : [],
+          boxShadow: isFiltering
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFF00FF75).withOpacity(0.2),
+                    blurRadius: 12,
+                    spreadRadius: 1,
+                  ),
+                ]
+              : [],
         ),
         alignment: Alignment.center,
         child: Row(

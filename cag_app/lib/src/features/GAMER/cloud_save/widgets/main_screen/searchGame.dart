@@ -30,9 +30,9 @@ class GameSearchBar extends StatelessWidget {
               controller: controller,
               onChanged: onChanged,
               style: const TextStyle(
-                color: Colors.white, 
-                fontSize: 13, 
-                fontFamily: 'monospace'
+                color: Colors.white,
+                fontSize: 13,
+                fontFamily: 'monospace',
               ),
               decoration: const InputDecoration(
                 hintText: "Tìm kiếm game trong kho IDC...",
