@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:ui';
-import 'dart:math' as math;
+import 'package:CAG_App/src/features/GAMER/cloud_save/widgets/animation.dart';
+import 'package:CAG_App/src/features/GAMER/cloud_save/widgets/game_filter_button.dart';
+import 'package:CAG_App/src/features/GAMER/cloud_save/widgets/searchGame.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import '../../../../models/game_model.dart';
 import '../../../../repositories/cloud_save_repository.dart';
 import '../widgets/game_card.dart';
@@ -23,60 +24,20 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
   late Timer _timer;
   String _currentTime = "";
   final CloudSaveRepository _repository = CloudSaveRepository();
-
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   late AnimationController _fireworksController;
-
   List<GameModel> _allGames = [];
   List<GameModel> _filteredGames = [];
   String _activeTab = "TẤT CẢ (IDC)";
   bool _isLoading = true;
   bool _showDiamondCard = false;
-
-  // final List<GameModel> _toolsList = [
-  //   GameModel(
-  //     title: "DISCORD",
-  //     location: "TOOLS",
-  //     imageUrl: "",
-  //     progressValue: "2026-03-20 17:32:21",
-  //     rank: "TOOLS",
-  //   ),
-  //   GameModel(
-  //     title: "LGHUB",
-  //     location: "TOOLS",
-  //     imageUrl: "",
-  //     progressValue: "2026-02-25 14:03:13",
-  //     rank: "TOOLS",
-  //   ),
-  //   GameModel(
-  //     title: "VANGUARD ANTI CAG",
-  //     location: "TOOLS",
-  //     imageUrl: "",
-  //     progressValue: "2026-02-20 11:36:09",
-  //     rank: "TOOLS",
-  //   ),
-  //   GameModel(
-  //     title: "FIREFOX",
-  //     location: "TOOLS",
-  //     imageUrl: "",
-  //     progressValue: "2026-01-03 11:28:56",
-  //     rank: "TOOLS",
-  //   ),
-  //   GameModel(
-  //     title: "COCCOC",
-  //     location: "TOOLS",
-  //     imageUrl: "",
-  //     progressValue: "2026-01-03 11:28:56",
-  //     rank: "TOOLS",
-  //   ),
-  // ];
-
+  bool _isFilteringNew = false;
+  final TextEditingController _searchController = TextEditingController();
   @override
   void initState() {
     super.initState();
     _currentTime = DateFormat('HH:mm dd/MM/yyyy').format(DateTime.now());
-
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -100,7 +61,6 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
         );
     });
   }
-
   Future<void> _fetchInitialData() async {
     try {
       final games = await _repository.fetchGamesFromApi();
@@ -115,7 +75,6 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
       if (mounted) setState(() => _isLoading = false);
     }
   }
-
   void _onTabChanged(String tabLabel) {
     setState(() {
       _activeTab = tabLabel;
@@ -126,13 +85,23 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
       } else if (tabLabel == "OFFLINE") {
         _filteredGames = _allGames.where((g) => g.rank == "OFFLINE").toList();
       } else if (tabLabel == "TOOLS") {
-        _filteredGames = _allGames.where((g) => g.rank == "TOOLS").toList();;
+        _filteredGames = _allGames.where((g) => g.rank == "TOOLS").toList();
       } else if (tabLabel == "GAME CỦA TÔI") {
         _filteredGames = _allGames.take(4).toList();
       }
     });
   }
-
+  void _onSearchChanged(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        _onTabChanged(_activeTab);
+      } else {
+        _filteredGames = _allGames
+            .where((game) => game.title.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      }
+    });
+  }
   void _triggerCongratulation() {
     _fireworksController.forward(from: 0.0);
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -142,17 +111,34 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
       }
     });
   }
-
+  void _toggleFilterNew() {
+    setState(() {
+      _isFilteringNew = !_isFilteringNew;
+      if (_isFilteringNew) {
+        DateTime now = DateTime.now();
+        _filteredGames = _allGames.where((game) {
+          DateTime updateTime = DateTime.tryParse(game.progressValue) ?? DateTime.now();
+          return now.difference(updateTime).inDays <= 3;
+        }).toList();
+      } else {
+        _onTabChanged(_activeTab);
+      }
+    });
+  }
   @override
   void dispose() {
     _timer.cancel();
     _animationController.dispose();
     _fireworksController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
+    int totalCount = _allGames.length;
+    int onlineCount = _allGames.where((g) => g.rank == "ONLINE").length;
+    int offlineCount = _allGames.where((g) => g.rank == "OFFLINE").length;
+    int toolsCount = _allGames.where((g) => g.rank == "TOOLS").length;
     return Scaffold(
       backgroundColor: const Color(0xFF080808),
       body: Stack(
@@ -191,37 +177,53 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
                       ),
                     ),
                     const SizedBox(height: 15),
-                    _buildTabFilter(),
+                    _buildTabFilter(totalCount, onlineCount, offlineCount, toolsCount),
                     const SizedBox(height: 20),
-                    _buildSearchBar(),
+                    GameSearchBar(
+                      controller: _searchController,
+                      onChanged: _onSearchChanged,
+                      gameCount: _filteredGames.length, // Truyền số lượng game đã lọc
+                    ),
                     const SizedBox(height: 15),
-                    _buildFilterButton(),
+                    GameFilterButton(
+                      isFiltering: _isFilteringNew,
+                      onTap: _toggleFilterNew, // Truyền hàm xử lý logic vào
+                    ),
                     const SizedBox(height: 20),
                     _buildInfoBanner(),
                     const SizedBox(height: 20),
                   ]),
                 ),
               ),
-              _isLoading
-                  ? const SliverToBoxAdapter(
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: Color(0xFF00FF75),
-                        ),
-                      ),
-                    )
-                  : SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      sliver: SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) => GameCard(
-                            game: _filteredGames[index],
-                            isMyGameTab: _activeTab == "GAME CỦA TÔI",
+              _isLoading 
+                ? const SliverToBoxAdapter(
+                    child: Center(child: CircularProgressIndicator(color: Color(0xFF00FF75))),
+                  )
+                : (_filteredGames.isEmpty 
+                    ? SliverToBoxAdapter(
+                        child: Container(
+                          height: 200,
+                          alignment: Alignment.center,
+                          child: const Text(
+                            "Không tìm thấy game phù hợp.",
+                            style: TextStyle(color: Colors.white24, fontSize: 14, fontFamily: 'monospace'),
                           ),
-                          childCount: _filteredGames.length,
                         ),
-                      ),
-                    ),
+                      )
+                    : SliverPadding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) => GameCard(
+                              game: _filteredGames[index],
+                              isMyGameTab: _activeTab == "GAME CỦA TÔI",
+                            ),
+                            childCount: _filteredGames.length,
+                          ),
+                        ),
+                      )
+                  ),
+
               const SliverToBoxAdapter(child: SizedBox(height: 120)),
             ],
           ),
@@ -597,7 +599,7 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
     );
   }
 
-  Widget _buildTabFilter() {
+  Widget _buildTabFilter(int total, int onl, int off, int too) {
     return Container(
       padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
@@ -609,10 +611,10 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            _filterItem("TẤT CẢ (IDC)", "404", _activeTab == "TẤT CẢ (IDC)"),
-            _filterItem("ONLINE", "224", _activeTab == "ONLINE"),
-            _filterItem("OFFLINE", "158", _activeTab == "OFFLINE"),
-            _filterItem("TOOLS", "20", _activeTab == "TOOLS"),
+            _filterItem("TẤT CẢ (IDC)", total.toString(), _activeTab == "TẤT CẢ (IDC)"),
+            _filterItem("ONLINE", onl.toString(), _activeTab == "ONLINE"),
+            _filterItem("OFFLINE", off.toString(), _activeTab == "OFFLINE"),
+            _filterItem("TOOLS", too.toString(), _activeTab == "TOOLS"),
             _filterItem("GAME CỦA TÔI", "4", _activeTab == "GAME CỦA TÔI"),
           ],
         ),
@@ -668,77 +670,6 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
       ),
     );
   }
-
-  Widget _buildSearchBar() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
-      decoration: BoxDecoration(
-        color: const Color(0xFF121212),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.search, color: Colors.white38, size: 20),
-          const SizedBox(width: 10),
-          const Expanded(
-            child: Text(
-              "Tìm kiếm game trong kho IDC",
-              style: TextStyle(
-                color: Colors.white24,
-                fontSize: 13,
-                fontFamily: 'monospace',
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: const Text(
-              "404 GAMES",
-              style: TextStyle(
-                color: Colors.white38,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFilterButton() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      decoration: BoxDecoration(
-        color: const Color(0xFF121212),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
-      ),
-      alignment: Alignment.center,
-      child: const Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.format_strikethrough, color: Colors.white54, size: 16),
-          SizedBox(width: 8),
-          Text(
-            "LỌC GAME MỚI",
-            style: TextStyle(
-              color: Colors.white54,
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildInfoBanner() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -1076,58 +1007,4 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
   }
 }
 
-// Widget Pháo hoa Native
-class NativeFireworks extends AnimatedWidget {
-  NativeFireworks({super.key, required Animation<double> animation})
-    : super(listenable: animation);
 
-  @override
-  Widget build(BuildContext context) {
-    final Animation<double> anim = listenable as Animation<double>;
-    if (anim.value == 0 || anim.value == 1) return const SizedBox.shrink();
-
-    final random = math.Random(42);
-    final particles = List.generate(60, (i) {
-      double startX = random.nextDouble();
-      double speed = 0.5 + random.nextDouble() * 1.5;
-      Color color = [
-        Colors.greenAccent,
-        Colors.blue,
-        Colors.pink,
-        Colors.orange,
-        Colors.yellow,
-      ][random.nextInt(5)];
-      return _ParticleDef(startX, speed, color);
-    });
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Stack(
-          children: particles.map((p) {
-            double y =
-                -50 + (anim.value * constraints.maxHeight * 1.5 * p.speed);
-            return Positioned(
-              left: p.startX * constraints.maxWidth,
-              top: y,
-              child: Transform.rotate(
-                angle: anim.value * math.pi * 4 * p.speed,
-                child: Container(
-                  width: 8 + (p.speed * 4),
-                  height: 8 + (p.speed * 4),
-                  color: p.color,
-                ),
-              ),
-            );
-          }).toList(),
-        );
-      },
-    );
-  }
-}
-
-class _ParticleDef {
-  final double startX;
-  final double speed;
-  final Color color;
-  _ParticleDef(this.startX, this.speed, this.color);
-}
