@@ -36,6 +36,7 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
   bool _isLoading = true;
   bool _showDiamondCard = false;
   bool _isFilteringNew = false;
+  String _searchQuery = "";
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -73,7 +74,7 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
       if (mounted) {
         setState(() {
           _allGames = games;
-          _onTabChanged(_activeTab);
+          _updateFilteredGames();
           _isLoading = false;
         });
       }
@@ -82,33 +83,57 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
     }
   }
 
+  void _updateFilteredGames() {
+    // Bước 1: Lọc theo tab
+    List<GameModel> tabFiltered;
+    if (_activeTab == "TẤT CẢ (IDC)") {
+      tabFiltered = _allGames;
+    } else if (_activeTab == "ONLINE") {
+      tabFiltered = _allGames.where((g) => g.rank == "ONLINE").toList();
+    } else if (_activeTab == "OFFLINE") {
+      tabFiltered = _allGames.where((g) => g.rank == "OFFLINE").toList();
+    } else if (_activeTab == "TOOLS") {
+      tabFiltered = _allGames.where((g) => g.rank == "TOOLS").toList();
+    } else if (_activeTab == "GAME CỦA TÔI") {
+      tabFiltered = []; // Không áp dụng filter cho tab này
+    } else {
+      tabFiltered = [];
+    }
+
+    // Bước 2: Lọc theo new filter nếu bật (chỉ cho các tab API)
+    if (_isFilteringNew && _activeTab != "GAME CỦA TÔI") {
+      DateTime now = DateTime.now();
+      tabFiltered = tabFiltered.where((game) {
+        DateTime updateTime =
+            DateTime.tryParse(game.progressValue) ?? DateTime.now();
+        return now.difference(updateTime).inDays <= 3;
+      }).toList();
+    }
+
+    // Bước 3: Lọc theo search
+    if (_searchQuery.isNotEmpty) {
+      _filteredGames = tabFiltered
+          .where(
+            (game) =>
+                game.title.toLowerCase().contains(_searchQuery.toLowerCase()),
+          )
+          .toList();
+    } else {
+      _filteredGames = tabFiltered;
+    }
+  }
+
   void _onTabChanged(String tabLabel) {
     setState(() {
       _activeTab = tabLabel;
-      if (tabLabel == "TẤT CẢ (IDC)") {
-        _filteredGames = _allGames;
-      } else if (tabLabel == "ONLINE") {
-        _filteredGames = _allGames.where((g) => g.rank == "ONLINE").toList();
-      } else if (tabLabel == "OFFLINE") {
-        _filteredGames = _allGames.where((g) => g.rank == "OFFLINE").toList();
-      } else if (tabLabel == "TOOLS") {
-        _filteredGames = _allGames.where((g) => g.rank == "TOOLS").toList();
-      } else if (tabLabel == "GAME CỦA TÔI") {
-        _filteredGames = [];
-      }
+      _updateFilteredGames();
     });
   }
 
   void _onSearchChanged(String query) {
     setState(() {
-      if (query.isEmpty)
-        _onTabChanged(_activeTab);
-      else
-        _filteredGames = _allGames
-            .where(
-              (game) => game.title.toLowerCase().contains(query.toLowerCase()),
-            )
-            .toList();
+      _searchQuery = query;
+      _updateFilteredGames();
     });
   }
 
@@ -131,16 +156,7 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
   void _toggleFilterNew() {
     setState(() {
       _isFilteringNew = !_isFilteringNew;
-      if (_isFilteringNew) {
-        DateTime now = DateTime.now();
-        _filteredGames = _allGames.where((game) {
-          DateTime updateTime =
-              DateTime.tryParse(game.progressValue) ?? DateTime.now();
-          return now.difference(updateTime).inDays <= 3;
-        }).toList();
-      } else {
-        _onTabChanged(_activeTab);
-      }
+      _updateFilteredGames();
     });
   }
 
@@ -164,6 +180,9 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
     int onlineCount = _allGames.where((g) => g.rank == "ONLINE").length;
     int offlineCount = _allGames.where((g) => g.rank == "OFFLINE").length;
     int toolsCount = _allGames.where((g) => g.rank == "TOOLS").length;
+    int searchCount = _searchQuery.isEmpty
+        ? (_activeTab == "GAME CỦA TÔI" ? 4 : _filteredGames.length)
+        : _filteredGames.length;
 
     return Scaffold(
       backgroundColor: const Color(0xFF080808),
@@ -233,9 +252,7 @@ class _CloudSaveScreenState extends State<CloudSaveScreen>
                     GameSearchBar(
                       controller: _searchController,
                       onChanged: _onSearchChanged,
-                      gameCount: _activeTab == "GAME CỦA TÔI"
-                          ? 4
-                          : _filteredGames.length,
+                      gameCount: searchCount,
                     ),
                     const SizedBox(height: 15),
                     GameFilterButton(

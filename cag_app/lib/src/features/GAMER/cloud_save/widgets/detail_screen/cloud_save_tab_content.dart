@@ -69,7 +69,7 @@ class _CloudSaveTabContentState extends State<CloudSaveTabContent> {
                 child: GestureDetector(
                   onTap: _handleAIAnalysis,
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 0),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 10,
                       vertical: 8,
@@ -86,43 +86,43 @@ class _CloudSaveTabContentState extends State<CloudSaveTabContent> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        if (_isAnalyzingAI) ...[
-                          const SizedBox(
-                            width: 12,
-                            height: 12,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white54,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          const Text(
-                            "AI ĐANG PHÂN TÍCH...",
-                            style: TextStyle(
-                              color: Colors.white54,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 9,
-                            ),
-                          ),
-                        ] else ...[
-                          const Icon(
-                            Icons.auto_awesome,
+                        // if (_isAnalyzingAI) ...[
+                        //   const SizedBox(
+                        //     width: 12,
+                        //     height: 12,
+                        //     child: CircularProgressIndicator(
+                        //       strokeWidth: 2,
+                        //       valueColor: AlwaysStoppedAnimation<Color>(
+                        //         Colors.white54,
+                        //       ),
+                        //     ),
+                        //   ),
+                        //   const SizedBox(width: 8),
+                        //   const Text(
+                        //     "AI ĐANG PHÂN TÍCH...",
+                        //     style: TextStyle(
+                        //       color: Colors.white54,
+                        //       fontWeight: FontWeight.w900,
+                        //       fontSize: 9,
+                        //     ),
+                        //   ),
+                        // ] else ...[
+                        //   const Icon(
+                        //     Icons.auto_awesome,
+                        //     color: Colors.white,
+                        //     size: 12,
+                        //   ),
+                        //   const SizedBox(width: 6),
+                        const Text(
+                          "AI PHÂN TÍCH TIẾN TRÌNH",
+                          style: TextStyle(
                             color: Colors.white,
-                            size: 12,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 9,
                           ),
-                          const SizedBox(width: 6),
-                          const Text(
-                            "AI PHÂN TÍCH TIẾN TRÌNH",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 9,
-                            ),
-                          ),
-                        ],
+                        ),
                       ],
+                      //],
                     ),
                   ),
                 ),
@@ -158,80 +158,24 @@ class _CloudSaveTabContentState extends State<CloudSaveTabContent> {
 
   Widget _buildAIResultBlock() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
         color: const Color(0xFF150B24),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: const Color(0xFF8A2BE2).withOpacity(0.3)),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: const Color(0xFF9333EA), width: 4),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF9333EA).withOpacity(0.5),
-                  blurRadius: 15,
-                ),
-              ],
-            ),
-            child: const Center(
-              child: Text(
-                "100%",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          const Row(
-            children: [
-              Icon(Icons.auto_awesome, color: Color(0xFFB388FF), size: 16),
-              SizedBox(width: 8),
-              Text(
-                "AI ĐÁNH GIÁ TIẾN TRÌNH",
-                style: TextStyle(
-                  color: Color(0xFFB388FF),
-                  fontWeight: FontWeight.w900,
-                  fontSize: 12,
-                  letterSpacing: 1.0,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          RichText(
-            text: const TextSpan(
+          const Center(
+            child: Text(
+              "Đang phát triển",
               style: TextStyle(
-                color: Colors.white70,
+                color: Color(0xFFB388FF),
+                fontWeight: FontWeight.w900,
                 fontSize: 12,
-                height: 1.6,
+                letterSpacing: 1.0,
               ),
-              children: [
-                TextSpan(
-                  text:
-                      "Dựa trên dữ liệu file save mới nhất, AI ước tính bạn đã hoàn thành ",
-                ),
-                TextSpan(
-                  text: "100% ",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                TextSpan(
-                  text:
-                      "cốt truyện chính.\nChúc mừng! Bạn đã hoàn thành cốt truyện chính của game.",
-                ),
-              ],
             ),
           ),
         ],
