@@ -38,7 +38,7 @@ class _HexagonBottomNavState extends State<HexagonBottomNav>
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
+      height: 90,
       decoration: BoxDecoration(
         color: const Color(0xFF020617),
         border: Border(
@@ -50,19 +50,17 @@ class _HexagonBottomNavState extends State<HexagonBottomNav>
         alignment: Alignment.center,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildNavItem(0, 'assets/icons/ic_community.svg', 'Cộng Đồng'),
-              _buildNavItem(1, 'assets/icons/ic_cloud_save.svg', 'Cloud Save'),
-              const SizedBox(width: 72),
-              _buildNavItem(3, 'assets/icons/ic_cag_guide.svg', 'CAG Guide'),
-              _buildNavItem(4, 'assets/icons/ic_profile.svg', 'Profile'),
+              Expanded(child: _buildNavItem(0, 'assets/icons/ic_community.svg', 'Cộng Đồng')),
+              Expanded(child: _buildNavItem(1, 'assets/icons/ic_cloud_save.svg', 'Cloud Save')),
+              const SizedBox(width: 64),
+              Expanded(child: _buildNavItem(3, 'assets/icons/ic_cag_guide.svg', 'CAG Guide')),
+              Expanded(child: _buildNavItem(4, 'assets/icons/ic_profile.svg', 'Profile')),
             ],
           ),
 
-          // Nút Hexagon giữa — nổi lên trên 24px (tương đương -top-6 trong CSS)
           Positioned(
-            top: -24,
+            top: -10,
             child: GestureDetector(
               onTap: () => widget.onTap(2),
               child: _buildHexagonCenterButton(),
@@ -87,13 +85,14 @@ class _HexagonBottomNavState extends State<HexagonBottomNav>
           children: [
             SvgPicture.asset(
               svgAsset,
-              width: 24,
-              height: 24,
+              width: 20,
+              height: 20,
               colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
             ),
             const SizedBox(height: 4),
             Text(
               label,
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: color,
                 fontSize: 11,
