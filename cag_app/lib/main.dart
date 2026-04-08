@@ -1,4 +1,5 @@
 import 'package:CAG_App/src/features/authentication/screens/slash_screen.dart';
+import 'package:CAG_App/src/features/authentication/widgets/forgot_password_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: const SlashScreen(),
+      home: const ForgotPasswordDialog(),
     );
   }
 }

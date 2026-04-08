@@ -47,7 +47,7 @@ class AuthScreen extends ConsumerWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _buildTopBar(context, activeColor),
+                        _buildTopBar(context),
                         const SizedBox(height: 25),
                         
                         // Khung chứa Form với hiệu ứng co dãn
@@ -74,24 +74,47 @@ class AuthScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildTopBar(BuildContext context, Color color) {
-    return Row(
-      children: [
-        Expanded(
-          child: TabBar(
-            dividerColor: Colors.transparent,
-            indicatorColor: color,
-            indicatorSize: TabBarIndicatorSize.label,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white24,
-            tabs: const [Tab(text: "ĐĂNG NHẬP"), Tab(text: "ĐĂNG KÝ")],
+  Widget _buildTopBar(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 45,
+      child: Stack(
+        children: [
+          // Thanh Tab nằm chính giữa
+          Align(
+            alignment: Alignment.center,
+            child: SizedBox(
+              width: 250,
+              child: TabBar(
+                dividerColor: Colors.transparent,
+                indicatorColor: AppTheme.cyanNeon,
+                indicatorWeight: 3,
+                indicatorSize: TabBarIndicatorSize.tab,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.white24,
+                labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                tabs: const [
+                  Tab(text: "ĐĂNG NHẬP"),
+                  Tab(text: "ĐĂNG KÝ"),
+                ],
+              ),
+            ),
           ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.close, color: Colors.white54),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ],
+          
+          // Nút X nằm bên phải
+          Align(
+            alignment: Alignment.centerRight,
+            child: GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Icon(
+                Icons.close, 
+                color: Colors.white.withOpacity(0.5), 
+                size: 26, // Kích thước vừa vặn như hình
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

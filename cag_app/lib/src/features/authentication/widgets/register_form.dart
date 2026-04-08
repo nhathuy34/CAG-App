@@ -5,7 +5,7 @@ import 'package:CAG_App/src/constants/app_theme.dart';
 import 'package:CAG_App/src/common_widgets/cag_text_field.dart';
 import 'package:CAG_App/src/features/authentication/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:CAG_App/src/repositories/auth_repository.dart'; 
+import 'package:CAG_App/src/repositories/auth_repository.dart';
 
 class RegisterForm extends ConsumerStatefulWidget {
   final Color activeColor;
@@ -23,7 +23,7 @@ class RegisterForm extends ConsumerStatefulWidget {
 class _RegisterFormState extends ConsumerState<RegisterForm> {
   bool isAgree = false;
   final GlobalKey _formKey = GlobalKey();
-  
+
   // Các biến quản lý lỗi & loading
   String? inlineErrorText;
   bool showBannerError = false;
@@ -35,15 +35,22 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   final phoneRegex = RegExp(r'^(0[3|5|7|8|9])+([0-9]{8})$');
-  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'); // Regex check định dạng email
+  final emailRegex = RegExp(
+    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+  ); // Regex check định dạng email
 
   void _updateHeight() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_formKey.currentContext != null) {
-        final renderBox = _formKey.currentContext!.findRenderObject() as RenderBox;
+        final renderBox =
+            _formKey.currentContext!.findRenderObject() as RenderBox;
         ref.read(authFormHeightProvider.notifier).state = renderBox.size.height;
       }
     });
@@ -53,14 +60,16 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   void initState() {
     super.initState();
     _updateHeight();
-    
+
     // Check lỗi live cho ô SĐT
     _phoneController.addListener(() {
       final text = _phoneController.text;
       setState(() {
         if (text.isEmpty) {
-          inlineErrorText = null; 
-        } else if (!text.startsWith('0') || text.length < 10 || !phoneRegex.hasMatch(text)) {
+          inlineErrorText = null;
+        } else if (!text.startsWith('0') ||
+            text.length < 10 ||
+            !phoneRegex.hasMatch(text)) {
           inlineErrorText = "Số điện thoại không hợp lệ";
         } else {
           inlineErrorText = null;
@@ -101,7 +110,10 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
       return;
     }
 
-    if (nameText.isEmpty || phoneText.isEmpty || emailText.isEmpty || passwordText.isEmpty) {
+    if (nameText.isEmpty ||
+        phoneText.isEmpty ||
+        emailText.isEmpty ||
+        passwordText.isEmpty) {
       setState(() {
         bannerErrorMessage = "Vui lòng điền đầy đủ các trường bắt buộc (*)";
         showBannerError = true;
@@ -144,7 +156,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
 
     // Xem đang chọn tab Game thủ hay Chủ quán (Giả sử: Game thủ = 4, Chủ quán = 5)
     final isGamerActive = ref.read(isGamerProvider);
-    final userType = isGamerActive ? 4 : 5; 
+    final userType = isGamerActive ? 4 : 5;
 
     final authRepo = AuthRepository();
     final response = await authRepo.registerRepo(
@@ -152,12 +164,12 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
       fullName: nameText,
       phoneNumber: phoneText,
       email: emailText,
-      username: phoneText, 
+      username: phoneText,
       password: passwordText,
       confirmPassword: confirmText,
-      province: "01", 
+      province: "01",
       commune: "001",
-      addressDetail: "Đang cập nhật", 
+      addressDetail: "Đang cập nhật",
     );
 
     if (!mounted) return;
@@ -166,7 +178,10 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
     if (response.success) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text("Đăng ký thành công! Vui lòng đăng nhập.", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          content: const Text(
+            "Đăng ký thành công! Vui lòng đăng nhập.",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
           backgroundColor: Colors.green.shade600,
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 3),
@@ -180,9 +195,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
       _passwordController.clear();
       _confirmPasswordController.clear();
       setState(() => isAgree = false);
-      
-      DefaultTabController.of(context).animateTo(0); 
 
+      DefaultTabController.of(context).animateTo(0);
     } else {
       setState(() {
         bannerErrorMessage = response.message;
@@ -221,27 +235,39 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
               margin: const EdgeInsets.only(bottom: 20),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: const Color(0xFF2A1619), 
+                color: const Color(0xFF2A1619),
                 border: Border.all(color: Colors.redAccent.withOpacity(0.5)),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.warning_amber_rounded, color: Colors.redAccent, size: 20),
+                  const Icon(
+                    Icons.warning_amber_rounded,
+                    color: Colors.redAccent,
+                    size: 20,
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       bannerErrorMessage,
-                      style: const TextStyle(color: Colors.redAccent, fontSize: 13, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        color: Colors.redAccent,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   GestureDetector(
                     onTap: () {
                       setState(() => showBannerError = false);
-                      _updateHeight(); 
+                      _updateHeight();
                     },
-                    child: const Icon(Icons.close, color: Colors.white54, size: 20),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.white54,
+                      size: 20,
+                    ),
                   ),
                 ],
               ),
@@ -250,7 +276,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
           // Ô HỌ TÊN
           CagTextField(
             controller: _nameController, // <-- Gắn Controller
-            label: "HỌ TÊN *",
+            label: "HỌ VÀ TÊN *",
             hint: "Nguyễn Văn A",
             activeColor: widget.activeColor,
             borderRadius: 8,
@@ -263,18 +289,20 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             controller: _phoneController, // <-- Gắn Controller
             label: "SỐ ĐIỆN THOẠI (TÊN ĐĂNG NHẬP) *",
             hint: "0912345678",
-            activeColor: inlineErrorText != null ? Colors.redAccent : AppTheme.cyanNeon, 
+            activeColor: inlineErrorText != null
+                ? Colors.redAccent
+                : AppTheme.cyanNeon,
             borderRadius: 8,
             verticalPadding: 12,
           ),
           if (inlineErrorText != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    inlineErrorText!,
-                    style: const TextStyle(color: Colors.redAccent, fontSize: 12),
-                  ),
-                ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                inlineErrorText!,
+                style: const TextStyle(color: Colors.redAccent, fontSize: 12),
+              ),
+            ),
           const SizedBox(height: 15),
 
           // Ô GMAIL & NÚT GỬI OTP
@@ -293,7 +321,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
               ),
               const SizedBox(width: 10),
               SizedBox(
-                height: 45,
+                height: 40,
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
@@ -306,7 +334,11 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                   ),
                   child: const Text(
                     "GỬI OTP",
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white54),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white54,
+                    ),
                   ),
                 ),
               ),
@@ -323,21 +355,49 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                   label: "MẬT KHẨU *",
                   hint: "••••••",
                   activeColor: widget.activeColor,
-                  isPassword: true,
+                  isPassword: _obscurePassword,
                   borderRadius: 8,
                   verticalPadding: 12,
+
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                      color: Colors.white54,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: CagTextField(
                   controller: _confirmPasswordController, // <-- Gắn Controller
-                  label: "NHẬP LẠI MK *",
+                  label: "NHẬP LẠI MẬT KHẨU *",
                   hint: "••••••",
                   activeColor: widget.activeColor,
-                  isPassword: true,
+                  isPassword: _obscurePassword,
                   borderRadius: 8,
                   verticalPadding: 12,
+
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                      color: Colors.white54,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                  ),
                 ),
               ),
             ],
@@ -391,7 +451,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
 
           // NÚT ĐĂNG KÝ TÀI KHOẢN
           CagPrimaryButton(
-            text: isLoading ? "ĐANG XỬ LÝ..." : "ĐĂNG KÝ TÀI KHOẢN", // Hiện trạng thái loading
+            text: isLoading
+                ? "ĐANG XỬ LÝ..."
+                : "ĐĂNG KÝ TÀI KHOẢN", // Hiện trạng thái loading
             backgroundColor: widget.activeColor,
             height: 55,
             borderRadius: 12,
@@ -400,13 +462,13 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             },
           ),
 
-          const SizedBox(height: 30),
+          // const SizedBox(height: 30),
 
-          // TEXT THOÁT
-          const Text(
-            "Nhấn phím ESC để thoát",
-            style: TextStyle(color: Colors.white24, fontSize: 12),
-          ),
+          // // TEXT THOÁT
+          // const Text(
+          //   "Nhấn phím ESC để thoát",
+          //   style: TextStyle(color: Colors.white24, fontSize: 12),
+          // ),
         ],
       ),
     );
@@ -419,7 +481,11 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
     return Row(
       children: [
         Expanded(
-          child: _roleOption("TÔI LÀ GAME THỦ", isGamerActive, AppTheme.cyanNeon),
+          child: _roleOption(
+            "TÔI LÀ GAME THỦ",
+            isGamerActive,
+            AppTheme.cyanNeon,
+          ),
         ),
         const SizedBox(width: 5),
         Expanded(
@@ -433,7 +499,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
     return GestureDetector(
       onTap: () {
         ref.read(isGamerProvider.notifier).state = (title == "TÔI LÀ GAME THỦ");
-        _updateHeight(); 
+        _updateHeight();
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
