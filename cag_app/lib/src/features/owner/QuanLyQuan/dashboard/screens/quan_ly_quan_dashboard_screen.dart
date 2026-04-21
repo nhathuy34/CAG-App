@@ -28,22 +28,20 @@ class QuanLyQuanDashboardScreen extends ConsumerWidget {
       body: Stack(
         children: [
           // Sub-feature Content
-          IndexedStack(
-            index: selectedSubIndex,
-            children: subScreens,
-          ),
+          IndexedStack(index: selectedSubIndex, children: subScreens),
 
           // Custom FAB Menu Overlay
           if (isMenuOpen)
             GestureDetector(
-              onTap: () => ref.read(isFABMenuOpenProvider.notifier).state = false,
+              onTap: () =>
+                  ref.read(isFABMenuOpenProvider.notifier).state = false,
               child: Container(
                 color: Colors.black.withOpacity(0.7),
                 width: double.infinity,
                 height: double.infinity,
               ),
             ),
-          
+
           if (isMenuOpen)
             Positioned(
               right: 16,
@@ -53,18 +51,27 @@ class QuanLyQuanDashboardScreen extends ConsumerWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => ref.read(isFABMenuOpenProvider.notifier).state = !isMenuOpen,
+        onPressed: () =>
+            ref.read(isFABMenuOpenProvider.notifier).state = !isMenuOpen,
         backgroundColor: const Color(0xFF2979FF),
         child: AnimatedRotation(
           duration: const Duration(milliseconds: 300),
           turns: isMenuOpen ? 0.125 : 0, // 45 degrees rotation for X effect
-          child: Icon(isMenuOpen ? Icons.add_rounded : Icons.apps_rounded, color: Colors.white, size: 32),
+          child: Icon(
+            isMenuOpen ? Icons.add_rounded : Icons.apps_rounded,
+            color: Colors.white,
+            size: 32,
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildVerticalMenu(BuildContext context, WidgetRef ref, int selectedSubIndex) {
+  Widget _buildVerticalMenu(
+    BuildContext context,
+    WidgetRef ref,
+    int selectedSubIndex,
+  ) {
     final menuItems = [
       {'icon': Icons.grid_view_rounded, 'label': 'Tổng quan'},
       {'icon': Icons.shopping_bag_outlined, 'label': 'Booking'},
@@ -93,12 +100,21 @@ class QuanLyQuanDashboardScreen extends ConsumerWidget {
                 // Label
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFF2979FF) : const Color(0xFF262626),
+                    color: isSelected
+                        ? const Color(0xFF2979FF)
+                        : const Color(0xFF262626),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
-                      BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 4))
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
                     ],
                   ),
                   child: Text(
@@ -116,10 +132,16 @@ class QuanLyQuanDashboardScreen extends ConsumerWidget {
                   width: 52,
                   height: 52,
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFF2979FF) : const Color(0xFF262626),
+                    color: isSelected
+                        ? const Color(0xFF2979FF)
+                        : const Color(0xFF262626),
                     shape: BoxShape.circle,
                     boxShadow: [
-                      BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 4))
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
                     ],
                     border: Border.all(
                       color: isSelected ? Colors.white24 : Colors.transparent,
