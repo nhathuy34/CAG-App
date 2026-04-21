@@ -101,9 +101,6 @@ class AdminSidebar extends StatelessWidget {
             topRight: Radius.circular(10),
             bottomRight: Radius.circular(10),
           ),
-          border: isSelected
-              ? const Border(left: BorderSide(color: AppTheme.cyanNeon, width: 3))
-              : const Border(left: BorderSide(color: Colors.transparent, width: 3)),
         ),
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         child: Row(
