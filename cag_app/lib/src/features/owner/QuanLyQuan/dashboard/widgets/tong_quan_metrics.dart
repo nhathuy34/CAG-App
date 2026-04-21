@@ -93,6 +93,7 @@ class OverviewMetricsWidget extends StatelessWidget {
   }
 }
 
+
 class ValuePropositionsWidget extends StatelessWidget {
   const ValuePropositionsWidget({super.key});
 
@@ -129,6 +130,7 @@ class ValuePropositionsWidget extends StatelessWidget {
       ],
     );
   }
+
 
   Widget _buildValueCard(
     String title,

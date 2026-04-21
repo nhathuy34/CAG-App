@@ -40,12 +40,12 @@ class ThongKeScreen extends StatelessWidget {
             SizedBox(height: 40),
             ValuePropositionsWidget(),
             SizedBox(height: 40),
-            TongQuanChartsSection(), // Biểu đồ tần suất & hội viên
+            TongQuanChartsSection(), 
             SizedBox(height: 20),
-            SourceChartWidget(), // Biểu đồ nguồn khách hàng
+            SourceChartWidget(), 
             SizedBox(height: 20),
             TopGamersWidget(),
-            SizedBox(height: 100), // Padding cho FAB khỏi che mất nội dung
+            SizedBox(height: 80), 
           ],
         ),
       ),
@@ -67,6 +67,32 @@ class ThongKeScreen extends StatelessWidget {
           SizedBox(width: 6),
           Text(
             "HỆ THỐNG ONLINE",
+            style: TextStyle(
+              color: Colors.green,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSection(){
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        color: Colors.green.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.green.withOpacity(0.5)),
+      ),
+      child: const Row(
+        children: [
+          CircleAvatar(backgroundColor: Colors.green, radius: 4),
+          SizedBox(width: 6),
+          Text(
+            "HỆ THỐNG OFFLINE",
             style: TextStyle(
               color: Colors.green,
               fontSize: 10,
