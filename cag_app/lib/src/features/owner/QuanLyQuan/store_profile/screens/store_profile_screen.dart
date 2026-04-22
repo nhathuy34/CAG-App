@@ -28,6 +28,7 @@ class _StoreProfileScreenState extends ConsumerState<StoreProfileScreen> {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => _buildNoBranchSelectedContent(),
       ),
+      
     );
   }
 

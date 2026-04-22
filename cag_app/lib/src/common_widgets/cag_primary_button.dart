@@ -59,7 +59,7 @@ class CagPrimaryButton extends StatelessWidget {
             : effectiveTextColor.withOpacity(0.15));
 
     return SizedBox(
-      width: double.infinity,
+      width: double.maxFinite,
       height: effectiveHeight,
       child: ElevatedButton(
         onPressed: onPressed,

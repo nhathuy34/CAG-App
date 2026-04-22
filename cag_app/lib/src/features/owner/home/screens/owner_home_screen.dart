@@ -1,4 +1,5 @@
 import 'package:CAG_App/src/features/owner/QuanLyQuan/dashboard/screens/quan_ly_quan_dashboard_screen.dart';
+import 'package:CAG_App/src/features/owner/QuanLyQuan/dashboard/screens/thong_bao_sceen.dart';
 import 'package:CAG_App/src/features/owner/QuanLyQuan/dashboard/screens/tong_quan_screen.dart';
 import 'package:CAG_App/src/features/owner/QuanLyQuan/widgets/owner_placeholder.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class OwnerHomeScreen extends ConsumerWidget {
       // Index 1: Thống kê
       const ThongKeScreen(),
       // Index 2: Thông báo
-      const OwnerPlaceholder(title: 'THÔNG BÁO'),
+      ThongBaoSceen(),
     ];
 
     return Scaffold(
@@ -30,7 +31,10 @@ class OwnerHomeScreen extends ConsumerWidget {
       body: Column(
         children: [
           // Custom Sticky Header
-          _buildHeader(context, ref, activeRole, selectedBranch),
+          if(selectedNavIndex != 2)
+            _buildHeader(context, ref, activeRole, selectedBranch)
+          ,
+
 
           // Main Content (3 Main Tabs)
           Expanded(
@@ -179,7 +183,7 @@ class OwnerHomeScreen extends ConsumerWidget {
           Icon(Icons.emoji_events, color: Color(0xFFEAB308), size: 14),
           SizedBox(width: 4),
           Text(
-            'VIP',
+            'VIP PARTNER',
             style: TextStyle(
               color: Color(0xFFEAB308),
               fontSize: 10,
