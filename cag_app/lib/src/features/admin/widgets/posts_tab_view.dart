@@ -147,17 +147,17 @@ class PostsTabView extends StatelessWidget {
                   border: Border(left: BorderSide(color: Colors.white10)),
                 ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _actionButton(Icons.check, "DUYỆT", Colors.green, Colors.white),
-                    const SizedBox(height: 10),
-                    _actionButton(Icons.close, "TỪ CHỐI", Colors.white12, Colors.white),
-                    const SizedBox(height: 25),
-                    const Divider(color: Colors.white10, height: 1),
-                    const SizedBox(height: 25),
-                    _actionButton(Icons.block, "BAN USER", Colors.redAccent.withOpacity(0.2), Colors.redAccent, false),
-                  ],
-                ),
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   children: [
+                     _actionButton(Icons.check, "DUYỆT", Colors.green, Colors.white),
+                     const SizedBox(height: 6),
+                     _actionButton(Icons.close, "TỪ CHỐI", Colors.white12, Colors.white),
+                     const SizedBox(height: 12),
+                     const Divider(color: Colors.white10, height: 1),
+                     const SizedBox(height: 12),
+                     _actionButton(Icons.block, "BAN USER", Colors.redAccent.withOpacity(0.2), Colors.redAccent, false),
+                   ],
+                 ),
               ),
             )
           ],
@@ -180,7 +180,7 @@ class PostsTabView extends StatelessWidget {
   Widget _actionButton(IconData icon, String label, Color bgColor, Color textColor, [bool isFilled = true]) {
     return SizedBox(
       width: double.infinity,
-      height: 35,
+      height: 28,
       child: ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
           backgroundColor: isFilled ? bgColor : Colors.transparent,
@@ -190,11 +190,11 @@ class PostsTabView extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             side: isFilled ? BorderSide.none : BorderSide(color: bgColor),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
         ),
         onPressed: () {},
-        icon: Icon(icon, size: 14),
-        label: FittedBox(fit: BoxFit.scaleDown, child: Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold))),
+        icon: Icon(icon, size: 12),
+        label: FittedBox(fit: BoxFit.scaleDown, child: Text(label, style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold))),
       ),
     );
   }

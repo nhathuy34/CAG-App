@@ -1,3 +1,5 @@
+import 'package:CAG_App/src/constants/app_theme.dart';
+import 'package:CAG_App/src/features/authentication/screens/welcome_screen.dart';
 import 'package:CAG_App/src/features/admin/screens/admin_main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
+      theme: AppTheme.darkTheme,
       home: const AdminMainScreen(),
     );
   }
