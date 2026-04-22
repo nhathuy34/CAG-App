@@ -6,6 +6,10 @@ class UsersTabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    // Sử dụng giá trị tỷ lệ (proportional) thay vì số mặc định 800.0
+    final effectiveWidth = screenWidth > 800 ? screenWidth : screenWidth * 2.0;
+
     // Mock dữ liệu User để hiển thị giống hình
     final mockUsers = [
       {
@@ -58,41 +62,41 @@ class UsersTabView extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.cardBlue,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(effectiveWidth * 0.015),
         border: Border.all(color: Colors.white10),
       ),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: SizedBox(
-          width: 800, // Chiều rộng tối thiểu để không bị bóp méo layout
+          width: effectiveWidth, // Chiều rộng tối thiểu để không bị bóp méo layout
           child: Column(
             children: [
               // Header Row
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                padding: EdgeInsets.symmetric(horizontal: effectiveWidth * 0.025, vertical: effectiveWidth * 0.02),
                 decoration: const BoxDecoration(
                   border: Border(bottom: BorderSide(color: Colors.white10)),
                 ),
                 child: Row(
                   children: [
-                    Expanded(flex: 3, child: _headerText("USER")),
-                    Expanded(flex: 1, child: _headerText("ROLE")),
-                    Expanded(flex: 2, child: _headerText("RANK / POINTS")),
-                    Expanded(flex: 1, child: _headerText("STATUS")),
-                    Expanded(flex: 2, child: Align(alignment: Alignment.centerRight, child: _headerText("ACTIONS"))),
+                    Expanded(flex: 3, child: _headerText(effectiveWidth, "USER")),
+                    Expanded(flex: 1, child: _headerText(effectiveWidth, "ROLE")),
+                    Expanded(flex: 2, child: _headerText(effectiveWidth, "RANK / POINTS")),
+                    Expanded(flex: 1, child: _headerText(effectiveWidth, "STATUS")),
+                    Expanded(flex: 2, child: Align(alignment: Alignment.centerRight, child: _headerText(effectiveWidth, "ACTIONS"))),
                   ],
                 ),
               ),
               // Danh sách Users
               Expanded(
                 child: ListView.separated(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  padding: EdgeInsets.symmetric(vertical: effectiveWidth * 0.015),
                   itemCount: mockUsers.length,
                   separatorBuilder: (_, __) => const Divider(color: Colors.white10, height: 1),
                   itemBuilder: (context, index) {
                     final user = mockUsers[index];
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      padding: EdgeInsets.symmetric(horizontal: effectiveWidth * 0.025, vertical: effectiveWidth * 0.02),
                       child: Row(
                         children: [
                           // Cột USER
@@ -100,19 +104,19 @@ class UsersTabView extends StatelessWidget {
                             flex: 3,
                             child: Row(
                               children: [
-                                const CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: Color(0xFF1E2430),
-                                  child: Icon(Icons.person, color: Colors.white70),
+                                CircleAvatar(
+                                  radius: effectiveWidth * 0.025,
+                                  backgroundColor: const Color(0xFF1E2430),
+                                  child: Icon(Icons.person, color: Colors.white70, size: effectiveWidth * 0.025),
                                 ),
-                                const SizedBox(width: 15),
+                                SizedBox(width: effectiveWidth * 0.02),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(user['name']!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
-                                    const SizedBox(height: 2),
-                                    Text(user['username']!, style: const TextStyle(color: Colors.white54, fontSize: 10)),
-                                    Text(user['email']!, style: const TextStyle(color: Colors.white54, fontSize: 10)),
+                                    Text(user['name']!, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: effectiveWidth * 0.018)),
+                                    SizedBox(height: effectiveWidth * 0.005),
+                                    Text(user['username']!, style: TextStyle(color: Colors.white54, fontSize: effectiveWidth * 0.014)),
+                                    Text(user['email']!, style: TextStyle(color: Colors.white54, fontSize: effectiveWidth * 0.014)),
                                   ],
                                 )
                               ],
@@ -123,7 +127,7 @@ class UsersTabView extends StatelessWidget {
                             flex: 1,
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: _roleBadge(user['role']!),
+                              child: _roleBadge(effectiveWidth, user['role']!),
                             ),
                           ),
                           // Cột RANK / POINTS
@@ -132,9 +136,9 @@ class UsersTabView extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(user['rank']!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
-                                const SizedBox(height: 2),
-                                Text(user['points']!, style: const TextStyle(color: AppTheme.gold, fontSize: 10)),
+                                Text(user['rank']!, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: effectiveWidth * 0.016)),
+                                SizedBox(height: effectiveWidth * 0.005),
+                                Text(user['points']!, style: TextStyle(color: AppTheme.gold, fontSize: effectiveWidth * 0.014)),
                               ],
                             ),
                           ),
@@ -143,7 +147,7 @@ class UsersTabView extends StatelessWidget {
                             flex: 1,
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: _statusBadge(user['status']!),
+                              child: _statusBadge(effectiveWidth, user['status']!),
                             ),
                           ),
                           // Cột ACTIONS
@@ -152,16 +156,16 @@ class UsersTabView extends StatelessWidget {
                             child: Align(
                               alignment: Alignment.centerRight,
                               child: Wrap(
-                                spacing: 8,
-                                runSpacing: 8,
+                                spacing: effectiveWidth * 0.01,
+                                runSpacing: effectiveWidth * 0.01,
                                 alignment: WrapAlignment.end,
                                 children: [
                                   if (user['status'] == "ACTIVE" && user['role'] != 'ADMIN')
-                                    _actionBtn("BAN", Colors.redAccent.withOpacity(0.2), Colors.redAccent),
+                                    _actionBtn(effectiveWidth, "BAN", Colors.redAccent.withOpacity(0.2), Colors.redAccent),
                                   if (user['status'] == "BANNED")
-                                    _actionBtn("UNBAN", Colors.green.withOpacity(0.2), Colors.green),
+                                    _actionBtn(effectiveWidth, "UNBAN", Colors.green.withOpacity(0.2), Colors.green),
                                   if (user['role'] != 'ADMIN')
-                                    _actionBtn("MAKE ADMIN", Colors.purple.withOpacity(0.2), Colors.purpleAccent),
+                                    _actionBtn(effectiveWidth, "MAKE ADMIN", Colors.purple.withOpacity(0.2), Colors.purpleAccent),
                                 ],
                               ),
                             ),
@@ -179,14 +183,14 @@ class UsersTabView extends StatelessWidget {
     );
   }
 
-  Widget _headerText(String text) {
+  Widget _headerText(double effectiveWidth, String text) {
     return Text(
       text,
-      style: const TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.bold),
+      style: TextStyle(color: Colors.white70, fontSize: effectiveWidth * 0.016, fontWeight: FontWeight.bold),
     );
   }
 
-  Widget _roleBadge(String role) {
+  Widget _roleBadge(double effectiveWidth, String role) {
     Color bgColor;
     Color textColor;
 
@@ -205,34 +209,34 @@ class UsersTabView extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(4)),
-      child: Text(role, style: TextStyle(color: textColor, fontSize: 10, fontWeight: FontWeight.bold)),
+      padding: EdgeInsets.symmetric(horizontal: effectiveWidth * 0.015, vertical: effectiveWidth * 0.008),
+      decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(effectiveWidth * 0.008)),
+      child: Text(role, style: TextStyle(color: textColor, fontSize: effectiveWidth * 0.014, fontWeight: FontWeight.bold)),
     );
   }
 
-  Widget _statusBadge(String status) {
+  Widget _statusBadge(double effectiveWidth, String status) {
     final isBanned = status == "BANNED";
     final bgColor = isBanned ? Colors.redAccent.withOpacity(0.2) : Colors.green.withOpacity(0.2);
     final textColor = isBanned ? Colors.redAccent : Colors.green;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(4)),
-      child: Text(status, style: TextStyle(color: textColor, fontSize: 10, fontWeight: FontWeight.bold)),
+      padding: EdgeInsets.symmetric(horizontal: effectiveWidth * 0.015, vertical: effectiveWidth * 0.008),
+      decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(effectiveWidth * 0.008)),
+      child: Text(status, style: TextStyle(color: textColor, fontSize: effectiveWidth * 0.014, fontWeight: FontWeight.bold)),
     );
   }
 
-  Widget _actionBtn(String label, Color bgColor, Color textColor) {
+  Widget _actionBtn(double effectiveWidth, String label, Color bgColor, Color textColor) {
     return InkWell(
       onTap: () {},
-      borderRadius: BorderRadius.circular(4),
+      borderRadius: BorderRadius.circular(effectiveWidth * 0.008),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(4)),
+        padding: EdgeInsets.symmetric(horizontal: effectiveWidth * 0.015, vertical: effectiveWidth * 0.008),
+        decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(effectiveWidth * 0.008)),
         child: Text(
           label,
-          style: TextStyle(color: textColor, fontSize: 10, fontWeight: FontWeight.bold),
+          style: TextStyle(color: textColor, fontSize: effectiveWidth * 0.014, fontWeight: FontWeight.bold),
         ),
       ),
     );

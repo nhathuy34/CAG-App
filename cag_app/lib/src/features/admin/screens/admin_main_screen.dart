@@ -16,19 +16,34 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
   // Danh sách các màn hình chính (Dưới dạng Mock cho các chức năng chưa làm)
   final List<Widget> _screens = [
     const ModerationScreen(),
-    const Center(child: Text("DASHBOARD (Chưa phát triển)", style: TextStyle(color: Colors.white))),
-    const Center(child: Text("QUẢN LÝ QUÁN (Chưa phát triển)", style: TextStyle(color: Colors.white))),
-    const Center(child: Text("THÔNG BÁO (Chưa phát triển)", style: TextStyle(color: Colors.white))),
+    const Center(
+      child: Text(
+        "DASHBOARD (Chưa phát triển)",
+        style: TextStyle(color: Colors.white),
+      ),
+    ),
+    const Center(
+      child: Text(
+        "QUẢN LÝ QUÁN (Chưa phát triển)",
+        style: TextStyle(color: Colors.white),
+      ),
+    ),
+    const Center(
+      child: Text(
+        "THÔNG BÁO (Chưa phát triển)",
+        style: TextStyle(color: Colors.white),
+      ),
+    ),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     // Điều kiện phân giải để hiển thị UI dạng Mobile hay Desktop/Tablet ngang
-    final isDesktop = MediaQuery.of(context).size.width >= 900;
+    final isDesktop = screenWidth >= 900;
 
     return Scaffold(
       backgroundColor: const Color(0xFF0B0F14), // Nền theo tông đen ám xanh nhẹ
-      
       // appBar chỉ hiện trên màn hình nhỏ để bật Drawer (Kéo ra kéo vào)
       appBar: isDesktop
           ? null
@@ -36,9 +51,15 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
               backgroundColor: const Color(0xFF0B0F14),
               elevation: 0,
               iconTheme: const IconThemeData(color: Colors.white),
-              title: const Text("ADMIN DASHBOARD", style: TextStyle(color: Colors.white, fontSize: 14)),
+              title: Text(
+                "ADMIN DASHBOARD",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: screenWidth * 0.035,
+                ),
+              ),
             ),
-            
+
       // Đưa sidebar vào Drawer nếu dùng điện thoại
       drawer: isDesktop
           ? null
@@ -52,7 +73,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                 },
               ),
             ),
-      
+
       body: Row(
         children: [
           // Sidebar cứng ngắc hiển thị nếu là Desktop
@@ -63,23 +84,27 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
                 setState(() => _selectedIndex = index);
               },
             ),
-          
+
           // Vùng nội dung chính (mở rộng theo Sidebar)
           Expanded(
             child: Stack(
               children: [
                 _screens[_selectedIndex],
-                
+
                 // Nút hỗ trợ góc dưới bên phải
                 Positioned(
-                  right: 30,
-                  bottom: 30,
+                  right: screenWidth * 0.05,
+                  bottom: screenWidth * 0.05,
                   child: FloatingActionButton(
                     onPressed: () {},
                     backgroundColor: AppTheme.cyanNeon,
                     elevation: 0,
                     mini: true,
-                    child: const Icon(Icons.settings, color: Colors.black, size: 20),
+                    child: Icon(
+                      Icons.settings,
+                      color: Colors.black,
+                      size: screenWidth * 0.05,
+                    ),
                   ),
                 ),
               ],

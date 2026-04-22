@@ -33,26 +33,28 @@ class _ModerationScreenState extends State<ModerationScreen> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // Header
         Padding(
-          padding: const EdgeInsets.only(left: 30, top: 30, bottom: 20),
+          padding: EdgeInsets.only(left: screenWidth * 0.075, top: screenWidth * 0.075, bottom: screenWidth * 0.05),
           child: Row(
             children: [
               Container(
-                width: 4,
-                height: 20,
+                width: screenWidth * 0.01,
+                height: screenWidth * 0.05,
                 color: Colors.redAccent,
               ),
-              const SizedBox(width: 10),
-              const Text(
+              SizedBox(width: screenWidth * 0.025),
+              Text(
                 "CAG GUARDIAN (ADMIN)",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
-                  fontSize: 18,
+                  fontSize: screenWidth * 0.055,
                   letterSpacing: 1,
                 ),
               ),
@@ -62,7 +64,7 @@ class _ModerationScreenState extends State<ModerationScreen> with SingleTickerPr
 
         // Custom TabBar
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.035),
           child: Container(
             decoration: const BoxDecoration(
               border: Border(bottom: BorderSide(color: Colors.white10)),
@@ -71,11 +73,11 @@ class _ModerationScreenState extends State<ModerationScreen> with SingleTickerPr
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _buildTabItem(0, "Kiểm Duyệt Bài Viết (2)"),
-                  const SizedBox(width: 10),
-                  _buildTabItem(1, "Duyệt Quán Net (2)"),
-                  const SizedBox(width: 10),
-                  _buildTabItem(2, "Quản Lý User"),
+                  _buildTabItem(screenWidth, 0, "Kiểm Duyệt Bài Viết (2)"),
+                  SizedBox(width: screenWidth * 0.025),
+                  _buildTabItem(screenWidth, 1, "Duyệt Quán Net (2)"),
+                  SizedBox(width: screenWidth * 0.025),
+                  _buildTabItem(screenWidth, 2, "Quản Lý User"),
                 ],
               ),
             ),
@@ -85,7 +87,7 @@ class _ModerationScreenState extends State<ModerationScreen> with SingleTickerPr
         // Tab Content
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: EdgeInsets.all(screenWidth * 0.035),
             child: TabBarView(
               controller: _tabController,
               children: const [
@@ -100,7 +102,7 @@ class _ModerationScreenState extends State<ModerationScreen> with SingleTickerPr
     );
   }
 
-  Widget _buildTabItem(int index, String title) {
+  Widget _buildTabItem(double screenWidth, int index, String title) {
     final isSelected = _tabController.index == index;
     return InkWell(
       onTap: () {
@@ -109,12 +111,12 @@ class _ModerationScreenState extends State<ModerationScreen> with SingleTickerPr
         });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        padding: EdgeInsets.symmetric(vertical: screenWidth * 0.025, horizontal: screenWidth * 0.05),
         decoration: BoxDecoration(
           color: isSelected ? Colors.purple.withOpacity(0.8) : const Color(0xFF1E2430),
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(8),
-            topRight: Radius.circular(8),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(screenWidth * 0.02),
+            topRight: Radius.circular(screenWidth * 0.02),
           ),
         ),
         child: Text(
@@ -122,7 +124,7 @@ class _ModerationScreenState extends State<ModerationScreen> with SingleTickerPr
           style: TextStyle(
             color: isSelected ? Colors.white : Colors.white54,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            fontSize: 13,
+            fontSize: screenWidth * 0.04,
           ),
         ),
       ),
