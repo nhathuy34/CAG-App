@@ -2,7 +2,7 @@ import 'package:CAG_App/src/constants/app_theme.dart';
 import 'package:CAG_App/src/features/admin/screens/moderation_screen.dart';
 import 'package:CAG_App/src/features/admin/widgets/admin_sidebar.dart';
 import 'package:flutter/material.dart';
-
+import 'package:CAG_App/src/features/admin/widgets/dashboard_tab_view.dart';
 class AdminMainScreen extends StatefulWidget {
   const AdminMainScreen({super.key});
 
@@ -16,12 +16,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
   // Danh sách các màn hình chính (Dưới dạng Mock cho các chức năng chưa làm)
   final List<Widget> _screens = [
     const ModerationScreen(),
-    const Center(
-      child: Text(
-        "DASHBOARD (Chưa phát triển)",
-        style: TextStyle(color: Colors.white),
-      ),
-    ),
+    const DashboardTabView(),
     const Center(
       child: Text(
         "QUẢN LÝ QUÁN (Chưa phát triển)",
