@@ -5,6 +5,8 @@ import 'package:CAG_App/src/features/admin/widgets/admin_sidebar.dart';
 import 'package:CAG_App/src/features/admin/screens/notifications_screen.dart';
 // import 'package:CAG_App/src/features/admin/widgets/dashboard_tab_view.dart';
 // import 'package:CAG_App/src/features/admin/widgets/dashboard_tab_view.dart';
+import 'package:CAG_App/src/features/admin/widgets/dashboard_tab_view.dart';
+
 class AdminMainScreen extends StatefulWidget {
   const AdminMainScreen({super.key});
 
@@ -17,12 +19,6 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
 
   final List<Widget> _screens = [
     const ModerationScreen(),
-    const Center(
-      child: Text(
-        "DASHBOARD (Chưa phát triển)",
-        style: TextStyle(color: Colors.white, fontSize: 16),
-      ),
-    ),
     const Center(
       child: Text(
         "QUẢN LÝ QUÁN (Chưa phát triển)",
